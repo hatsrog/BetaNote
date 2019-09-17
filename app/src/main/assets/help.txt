@@ -1,0 +1,3 @@
+ -- BetaNote --
+
+ Une application créée par Sébastien Jourdan <sebastien@jourdan.info>
