@@ -19,9 +19,16 @@ public class Settings {
         return settings;
     }
 
-    public void setNote()
+    public void setNode(String updatedKey, String updatedValue)
     {
-
+        Map<String, String> settings = getAllSettings();
+        for(String key : settings.keySet())
+        {
+            if(key.equals(updatedKey))
+            {
+                // Write new value here
+            }
+        }
     }
 
     public void createSettingsNodes()
