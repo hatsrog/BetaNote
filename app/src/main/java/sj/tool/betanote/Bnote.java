@@ -61,11 +61,23 @@ public class Bnote extends AppCompatActivity {
             try {
                 BufferedReader br = new BufferedReader(new FileReader(getFilesDir().toString() + "/betanote_files/"+filename));
                 String line;
+                Boolean endOfSettings = false;
 
                 while ((line = br.readLine()) != null) {
-                    text.append(line);
-                    text.append('\n');
-                    editTextBnote.append(line+"\n");
+                    if(line.trim().equals(">>"))
+                    {
+                        endOfSettings = true;
+                        continue;
+                    }
+                    if(endOfSettings) {
+                        text.append(line);
+                        text.append('\n');
+                        editTextBnote.append(line+"\n");
+                    }
+                    else
+                    {
+                        //! Lire les settings
+                    }
                 }
                 br.close();
             }
@@ -88,7 +100,7 @@ public class Bnote extends AppCompatActivity {
                 {
                     File directory = new File(getFilesDir().toString(), "betanote_files");
                     String filename = Math.random() * 10000 + 1+".txt";
-                    Settings settings = new Settings(getFilesDir().toString()+"/betanote_files/"+filename);
+                    Settings settings = new Settings();
                     File init = new File(getFilesDir().toString()+"/betanote_files", filename);
                     try {
                         if(newFile.equals("true")) {
