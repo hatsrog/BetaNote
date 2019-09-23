@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout linearLayoutLatest = new LinearLayout(this);
         linearLayoutLatest.setOrientation(LinearLayout.VERTICAL);
 
-        // Ajout d'un bouton par fichier texte trouvé dans les assets
+        // Ajout d'un bouton par fichier texte trouvé
         for (String latestFiles : latest) {
             final Button addButtonLatest = new Button(this);
             addButtonLatest.setText(latestFiles);
@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     Intent intent = new Intent(MainActivity.this, Bnote.class);
                     intent.putExtra("filename", addButtonLatest.getText());
+                    intent.putExtra("newFile", "false");
                     startActivity(intent);
                 }
             });
@@ -113,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Bnote.class);
+                intent.putExtra("newFile", "true");
                 startActivity(intent);
             }
         });

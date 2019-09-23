@@ -14,6 +14,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import core.FileFinder;
+import core.Settings;
+
 public class Bnote extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +28,8 @@ public class Bnote extends AppCompatActivity {
         final EditText editTextBnote = findViewById(R.id.editTextBnote);
         String filenameAssets = intent.getStringExtra("filenameAssets");
         String filename = intent.getStringExtra("filename");
+        final String newFile = intent.getStringExtra("newFile");
+
         if (filenameAssets != null) {
             editTextBnote.setText(null);
             BufferedReader reader = null;
@@ -82,14 +87,23 @@ public class Bnote extends AppCompatActivity {
                 if(editTextBnote != null)
                 {
                     File directory = new File(getFilesDir().toString(), "betanote_files");
-                    boolean hasCreated = directory.mkdirs();
-                    File init = new File(getFilesDir().toString()+"/betanote_files", Math.random() * 10000 + 1+".txt");
+                    String filename = Math.random() * 10000 + 1+".txt";
+                    Settings settings = new Settings(getFilesDir().toString()+"/betanote_files/"+filename);
+                    File init = new File(getFilesDir().toString()+"/betanote_files", filename);
                     try {
-                        init.createNewFile();
-                        FileWriter writer = new FileWriter(init);
-                        writer.append(editTextBnote.getText());
-                        writer.flush();
-                        writer.close();
+                        if(newFile.equals("true")) {
+                            init.createNewFile();
+                            String createdSettings = settings.createSettingsNodes();
+                            FileWriter writer = new FileWriter(init);
+                            writer.append(createdSettings);
+                            writer.append(editTextBnote.getText());
+                            writer.flush();
+                            writer.close();
+                        }
+                        else if(newFile.equals("false"))
+                        {
+                            //! Ouvrir le fichier et y remplacer par les modifications
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
