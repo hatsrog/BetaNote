@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,22 +8,19 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
             android:orientation="horizontal"
             android:background="@android:color/holo_blue_light">
 
-            <TextView
-                android:id="@+id/lblExpenseCancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="9dp"
-                android:text="Titre"
-                android:textColor="#404040"
-                android:textSize="20sp" />
+            <EditText
+                android:id="@+id/editTextTitle"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginEnd="100dp"
+                android:singleLine="true" />
 
             <Button
                 android:id="@+id/btnSave"
@@ -50,8 +45,7 @@
             android:layout_height="match_parent"
             android:ems="10"
             android:gravity="start|top"
-            android:inputType="textMultiLine"
-            android:text="Default text" />
+            android:inputType="textMultiLine" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
