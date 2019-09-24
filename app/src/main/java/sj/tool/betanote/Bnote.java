@@ -26,6 +26,7 @@ public class Bnote extends AppCompatActivity {
         Button btnExit = findViewById(R.id.btnExit);
         Button btnSave = findViewById(R.id.btnSave);
         final EditText editTextBnote = findViewById(R.id.editTextBnote);
+        final EditText editTextTitle = findViewById(R.id.editTextTitle);
         String filenameAssets = intent.getStringExtra("filenameAssets");
         String filename = intent.getStringExtra("filename");
         final String newFile = intent.getStringExtra("newFile");
@@ -100,12 +101,17 @@ public class Bnote extends AppCompatActivity {
                 {
                     File directory = new File(getFilesDir().toString(), "betanote_files");
                     String filename = Math.random() * 10000 + 1+".txt";
-                    Settings settings = new Settings();
                     File init = new File(getFilesDir().toString()+"/betanote_files", filename);
                     try {
                         if(newFile.equals("true")) {
+                            Settings settings = new Settings();
                             init.createNewFile();
-                            String createdSettings = settings.createSettingsNodes();
+                            settings.createSettingsNodes();
+                            if(editTextTitle != null)
+                            {
+                                settings.setNode("title", editTextTitle.getText().toString());
+                            }
+                            String createdSettings = settings.getSettingsAsString();
                             FileWriter writer = new FileWriter(init);
                             writer.append(createdSettings);
                             writer.append(editTextBnote.getText());
