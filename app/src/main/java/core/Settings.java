@@ -7,17 +7,24 @@ import java.util.Map;
 public class Settings {
 
     private Map<String, String> settingsMap;
-    private String _raw;
 
-    private Settings(String rawSettings)
+    public Settings(String rawSettings)
     {
-        this._raw = rawSettings;
-        //! Convert raw string settings to Map<String, String>
+        convertToMap(rawSettings);
     }
 
     public Settings()
     {
         this.settingsMap = new HashMap<>();
+    }
+
+    private void convertToMap(String strSettings)
+    {
+        //! Convert to Map
+        if(settingsMap == null)
+        {
+            //! Parse and may be add pipes between settings node
+        }
     }
 
     public String getSettingsAsString()
@@ -26,7 +33,7 @@ public class Settings {
         for (Map.Entry<String, String> entry : settingsMap.entrySet()) {
             settingsAsString += entry.getKey() + ":" + entry.getValue() + "\n";
         }
-        settingsAsString += ">>";
+        settingsAsString += ">>\n";
         return settingsAsString;
     }
 
@@ -44,5 +51,17 @@ public class Settings {
             settingsMap.remove(key);
             settingsMap.put(key, value);
         }
+    }
+
+    public String getNode(String key)
+    {
+        String returnedValue = null;
+        for (Map.Entry<String, String> entry : settingsMap.entrySet()) {
+            if(entry.getKey() == key)
+            {
+                returnedValue = entry.getValue();
+            }
+        }
+        return returnedValue;
     }
 }

@@ -31,6 +31,9 @@ public class Bnote extends AppCompatActivity {
         String filename = intent.getStringExtra("filename");
         final String newFile = intent.getStringExtra("newFile");
 
+        String strsettings = null;
+        Settings settings = null;
+
         if (filenameAssets != null) {
             editTextBnote.setText(null);
             BufferedReader reader = null;
@@ -70,17 +73,26 @@ public class Bnote extends AppCompatActivity {
                         endOfSettings = true;
                         continue;
                     }
-                    if(endOfSettings) {
+                    if(!endOfSettings)
+                    {
+                        if(!line.trim().equals("<<"))
+                        {
+                            strsettings += line;
+                        }
+                    }
+                    else
+                    {
                         text.append(line);
                         text.append('\n');
                         editTextBnote.append(line+"\n");
                     }
-                    else
-                    {
-                        //! Lire les settings
-                    }
                 }
                 br.close();
+                if(strsettings != null)
+                {
+                    settings = new Settings(strsettings);
+
+                }
             }
             catch (IOException e) {
                 //You'll need to add proper error handling here
