@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Map;
 
 import core.FileFinder;
 import core.Settings;
@@ -77,7 +78,7 @@ public class Bnote extends AppCompatActivity {
                     {
                         if(!line.trim().equals("<<"))
                         {
-                            strsettings += line;
+                            strsettings += line + "\n";
                         }
                     }
                     else
@@ -91,7 +92,11 @@ public class Bnote extends AppCompatActivity {
                 if(strsettings != null)
                 {
                     settings = new Settings(strsettings);
-
+                    String getTitle = settings.getNode("title");
+                    if(getTitle != null)
+                    {
+                        editTextTitle.setText(getTitle);
+                    }
                 }
             }
             catch (IOException e) {

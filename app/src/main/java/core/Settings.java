@@ -20,10 +20,19 @@ public class Settings {
 
     private void convertToMap(String strSettings)
     {
-        //! Convert to Map
         if(settingsMap == null)
         {
-            //! Parse and may be add pipes between settings node
+            settingsMap = new HashMap<>();
+            String[] arrSettings = strSettings.split("\n");
+            for(String elementSetting : arrSettings)
+            {
+                String[] registry = elementSetting.split(":");
+                //! Fix characters escape for \n and :
+                if(registry.length == 2)
+                {
+                    settingsMap.put(registry[0], registry[1]);
+                }
+            }
         }
     }
 
@@ -57,7 +66,7 @@ public class Settings {
     {
         String returnedValue = null;
         for (Map.Entry<String, String> entry : settingsMap.entrySet()) {
-            if(entry.getKey() == key)
+            if(entry.getKey().equals(key))
             {
                 returnedValue = entry.getValue();
             }
