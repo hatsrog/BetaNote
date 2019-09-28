@@ -22,6 +22,7 @@ public class Bnote extends AppCompatActivity {
 
     EditText editTextTitle = null;
     EditText editTextBnote = null;
+    Settings settings = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +77,20 @@ public class Bnote extends AppCompatActivity {
                 }
             }
         }
+
+        if(settings != null)
+        {
+            String getTitle = settings.getNode("title");
+            if (getTitle != null) {
+                editTextTitle.setText(getTitle);
+            }
+            String getEdit = settings.getNode("canEdit");
+            if (getEdit != null && getEdit.equals("0")) {
+                editTextBnote.setEnabled(false);
+                editTextTitle.setEnabled(false);
+            }
+        }
+
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,7 +139,6 @@ public class Bnote extends AppCompatActivity {
         String line;
         Boolean endOfSettings = false;
         String strsettings = "";
-        Settings settings = null;
         StringBuilder text = new StringBuilder();
 
         while ((line = br.readLine()) != null) {
@@ -150,11 +164,6 @@ public class Bnote extends AppCompatActivity {
         if(strsettings != null)
         {
             settings = new Settings(strsettings);
-            String getTitle = settings.getNode("title");
-            if(getTitle != null)
-            {
-                editTextTitle.setText(getTitle);
-            }
         }
     }
 }
