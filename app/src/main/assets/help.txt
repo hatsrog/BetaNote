@@ -1,3 +1,7 @@
- -- BetaNote --
+<<
+title:Aide officielle de BetaNote
+canEdit:0
+>>
+-- BetaNote --
 
- Une application créée par Sébastien Jourdan <sebastien@jourdan.info>
+Une application créée par Sébastien Jourdan <sebastien@jourdan.info>

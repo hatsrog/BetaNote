@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //prefs.edit().clear().commit();
         if (prefs.getBoolean("firstrun", true))
         {
             if (ContextCompat.checkSelfPermission(this,
@@ -56,18 +55,8 @@ public class MainActivity extends AppCompatActivity {
                 // Permission has already been granted
             }
             File directory = new File(getFilesDir().toString(), "betanote_files");
-            boolean hasCreated = directory.mkdirs();
-            File init = new File(getFilesDir().toString()+"/betanote_files", "initiator.txt");
-            try {
-                init.createNewFile();
-                FileWriter writer = new FileWriter(init);
-                writer.append("Ce fichier marche, trop bien");
-                writer.flush();
-                writer.close();
-                prefs.edit().putBoolean("firstrun", false).apply();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            directory.mkdirs();
+            prefs.edit().putBoolean("firstrun", false).apply();
         }
         else
         {
@@ -82,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
         prefs = getSharedPreferences("sj.tool.betanote", MODE_PRIVATE);
         Button btnNew = findViewById(R.id.btnNew);
-        Button btnOpen = findViewById(R.id.btnOpen);
         Button btnHelp = findViewById(R.id.btnHelp);
         ScrollView scrollViewLatest = findViewById(R.id.scrollViewLatest);
 

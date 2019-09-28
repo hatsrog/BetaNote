@@ -19,6 +19,10 @@ import core.FileFinder;
 import core.Settings;
 
 public class Bnote extends AppCompatActivity {
+
+    EditText editTextTitle = null;
+    EditText editTextBnote = null;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bnote);
@@ -26,14 +30,11 @@ public class Bnote extends AppCompatActivity {
 
         Button btnExit = findViewById(R.id.btnExit);
         Button btnSave = findViewById(R.id.btnSave);
-        final EditText editTextBnote = findViewById(R.id.editTextBnote);
-        final EditText editTextTitle = findViewById(R.id.editTextTitle);
-        String filenameAssets = intent.getStringExtra("filenameAssets");
+        editTextBnote = findViewById(R.id.editTextBnote);
+        editTextTitle = findViewById(R.id.editTextTitle);
+        final String filenameAssets = intent.getStringExtra("filenameAssets");
         String filename = intent.getStringExtra("filename");
         final String newFile = intent.getStringExtra("newFile");
-
-        String strsettings = null;
-        Settings settings = null;
 
         if (filenameAssets != null) {
             editTextBnote.setText(null);
@@ -42,11 +43,7 @@ public class Bnote extends AppCompatActivity {
                 reader = new BufferedReader(
                         new InputStreamReader(getAssets().open(filenameAssets)));
 
-                // do reading, usually loop until end of file reading
-                String mLine;
-                while ((mLine = reader.readLine()) != null) {
-                    editTextBnote.append(mLine + "\n");
-                }
+                extractData(reader);
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -61,46 +58,22 @@ public class Bnote extends AppCompatActivity {
         }
         if (filename != null) {
             editTextBnote.setText(null);
-            StringBuilder text = new StringBuilder();
-
+            BufferedReader br = null;
             try {
-                BufferedReader br = new BufferedReader(new FileReader(getFilesDir().toString() + "/betanote_files/"+filename));
-                String line;
-                Boolean endOfSettings = false;
-
-                while ((line = br.readLine()) != null) {
-                    if(line.trim().equals(">>"))
-                    {
-                        endOfSettings = true;
-                        continue;
-                    }
-                    if(!endOfSettings)
-                    {
-                        if(!line.trim().equals("<<"))
-                        {
-                            strsettings += line + "\n";
-                        }
-                    }
-                    else
-                    {
-                        text.append(line);
-                        text.append('\n');
-                        editTextBnote.append(line+"\n");
-                    }
-                }
-                br.close();
-                if(strsettings != null)
-                {
-                    settings = new Settings(strsettings);
-                    String getTitle = settings.getNode("title");
-                    if(getTitle != null)
-                    {
-                        editTextTitle.setText(getTitle);
-                    }
-                }
+                br = new BufferedReader(new FileReader(getFilesDir().toString() + "/betanote_files/"+filename));
+                extractData(br);
             }
             catch (IOException e) {
                 //You'll need to add proper error handling here
+            }
+            finally
+            {
+                try
+                {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         btnExit.setOnClickListener(new View.OnClickListener() {
@@ -145,5 +118,43 @@ public class Bnote extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void extractData(BufferedReader br) throws IOException {
+        String line;
+        Boolean endOfSettings = false;
+        String strsettings = "";
+        Settings settings = null;
+        StringBuilder text = new StringBuilder();
+
+        while ((line = br.readLine()) != null) {
+            if(line.trim().equals(">>"))
+            {
+                endOfSettings = true;
+                continue;
+            }
+            if(!endOfSettings)
+            {
+                if(!line.trim().equals("<<"))
+                {
+                    strsettings += line + "\n";
+                }
+            }
+            else
+            {
+                text.append(line);
+                text.append('\n');
+                editTextBnote.append(line+"\n");
+            }
+        }
+        if(strsettings != null)
+        {
+            settings = new Settings(strsettings);
+            String getTitle = settings.getNode("title");
+            if(getTitle != null)
+            {
+                editTextTitle.setText(getTitle);
+            }
+        }
     }
 }
