@@ -18,6 +18,8 @@ public class Settings {
         this.settingsMap = new HashMap<>();
     }
 
+    public Map<String, String> getSettingsMap() { return this.settingsMap; }
+
     private void convertToMap(String strSettings)
     {
         if(settingsMap == null)
