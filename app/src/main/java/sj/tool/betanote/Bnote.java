@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Calendar;
 import java.util.Map;
 
 import core.FileFinder;
@@ -23,6 +24,7 @@ public class Bnote extends AppCompatActivity {
     EditText editTextTitle = null;
     EditText editTextBnote = null;
     Settings settings = null;
+    String filename = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +36,7 @@ public class Bnote extends AppCompatActivity {
         editTextBnote = findViewById(R.id.editTextBnote);
         editTextTitle = findViewById(R.id.editTextTitle);
         final String filenameAssets = intent.getStringExtra("filenameAssets");
-        String filename = intent.getStringExtra("filename");
+        final String filename = intent.getStringExtra("filename");
         final String newFile = intent.getStringExtra("newFile");
 
         if (filenameAssets != null) {
@@ -104,19 +106,19 @@ public class Bnote extends AppCompatActivity {
             public void onClick(View v) {
                 if(editTextBnote != null)
                 {
-                    File directory = new File(getFilesDir().toString(), "betanote_files");
-                    String filename = Math.random() * 10000 + 1+".txt";
-                    File init = new File(getFilesDir().toString()+"/betanote_files", filename);
                     try {
                         if(newFile.equals("true")) {
-                            Settings settings = new Settings();
+                            File directory = new File(getFilesDir().toString(), "betanote_files");
+                            String filename = Math.random() * 10000 + 1+".txt";
+                            File init = new File(getFilesDir().toString()+"/betanote_files", filename);
+                            Settings settingsNewFile = new Settings();
                             init.createNewFile();
-                            settings.createSettingsNodes();
+                            settingsNewFile.createSettingsNodes();
                             if(editTextTitle != null)
                             {
-                                settings.setNode("title", editTextTitle.getText().toString());
+                                settingsNewFile.setNode("title", editTextTitle.getText().toString());
                             }
-                            String createdSettings = settings.getSettingsAsString();
+                            String createdSettings = settingsNewFile.getSettingsAsString();
                             FileWriter writer = new FileWriter(init);
                             writer.append(createdSettings);
                             writer.append(editTextBnote.getText());
@@ -126,6 +128,21 @@ public class Bnote extends AppCompatActivity {
                         else if(newFile.equals("false"))
                         {
                             //! Ouvrir le fichier et y remplacer par les modifications
+                            File init = new File(getFilesDir().toString()+"/betanote_files", filename);
+                            if(settings != null)
+                            {
+                                settings.setNode("lastModification", Calendar.getInstance().getTime().toString());
+                            }
+                            if(editTextBnote != null)
+                            {
+                                String storeText = editTextBnote.getText().toString();
+                                FileWriter writer = new FileWriter(init);
+                                writer.write("");
+                                writer.append(settings.getSettingsAsString());
+                                writer.append(storeText);
+                                writer.flush();
+                                writer.close();
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

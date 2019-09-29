@@ -49,6 +49,7 @@ public class Settings {
     public void createSettingsNodes()
     {
         settingsMap.put("title", "");
+        settingsMap.put("canEdit", "1");
         settingsMap.put("creationDate", Calendar.getInstance().getTime().toString());
         settingsMap.put("lastModification", Calendar.getInstance().getTime().toString());
     }
