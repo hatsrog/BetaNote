@@ -30,8 +30,6 @@ public class FileFinder {
         for(String note : notes)
         {
             //! Read file and extract settings and body text foreach file
-            DataAnalyzer.extractBodyText("");
-            DataAnalyzer.extractSettings("");
         }
         return notesInContext;
     }

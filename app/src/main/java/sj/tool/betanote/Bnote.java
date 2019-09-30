@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.Map;
 
+import core.DataAnalyzer;
 import core.FileFinder;
 import core.Settings;
 
@@ -24,7 +25,6 @@ public class Bnote extends AppCompatActivity {
     EditText editTextTitle = null;
     EditText editTextBnote = null;
     Settings settings = null;
-    String filename = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +45,15 @@ public class Bnote extends AppCompatActivity {
             try {
                 reader = new BufferedReader(
                         new InputStreamReader(getAssets().open(filenameAssets)));
+                String bodyText = DataAnalyzer.extractBodyText(reader);
+                if(bodyText != null)
+                {
+                    editTextBnote.setText(bodyText);
+                }
+                reader = new BufferedReader(
+                        new InputStreamReader(getAssets().open(filenameAssets)));
+                settings = new Settings(DataAnalyzer.extractSettings(reader));
 
-                extractData(reader);
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -64,7 +71,13 @@ public class Bnote extends AppCompatActivity {
             BufferedReader br = null;
             try {
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/betanote_files/"+filename));
-                extractData(br);
+                String bodyText = DataAnalyzer.extractBodyText(br);
+                if(bodyText != null)
+                {
+                    editTextBnote.setText(bodyText);
+                }
+                br = new BufferedReader(new FileReader(getFilesDir().toString() + "/betanote_files/"+filename));
+                settings = new Settings(DataAnalyzer.extractSettings(br));
             }
             catch (IOException e) {
                 //You'll need to add proper error handling here
@@ -150,37 +163,5 @@ public class Bnote extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    public void extractData(BufferedReader br) throws IOException {
-        String line;
-        Boolean endOfSettings = false;
-        String strsettings = "";
-        StringBuilder text = new StringBuilder();
-
-        while ((line = br.readLine()) != null) {
-            if(line.trim().equals(">>"))
-            {
-                endOfSettings = true;
-                continue;
-            }
-            if(!endOfSettings)
-            {
-                if(!line.trim().equals("<<"))
-                {
-                    strsettings += line + "\n";
-                }
-            }
-            else
-            {
-                text.append(line);
-                text.append('\n');
-                editTextBnote.append(line+"\n");
-            }
-        }
-        if(strsettings != null)
-        {
-            settings = new Settings(strsettings);
-        }
     }
 }
