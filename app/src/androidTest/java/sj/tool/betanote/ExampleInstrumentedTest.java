@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("sj.tool.betanote", appContext.getPackageName());
+        assertEquals("sj.tool.betanote_proto", appContext.getPackageName());
     }
 }

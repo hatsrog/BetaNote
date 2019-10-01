@@ -14,10 +14,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Calendar;
-import java.util.Map;
 
 import core.DataAnalyzer;
-import core.FileFinder;
 import core.Settings;
 
 public class Bnote extends AppCompatActivity {
