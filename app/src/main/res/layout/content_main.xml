@@ -14,14 +14,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnHelp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:text="Help" />
-
         <ScrollView
             android:id="@+id/scrollViewLatest"
             android:layout_marginBottom="80dp"

@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.List;
 
 import core.FileFinder;
+import helper.GenericConstants;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity
             } else {
                 // Permission has already been granted
             }
-            File directory = new File(getFilesDir().toString(), "betanote_files");
+            File directory = new File(getFilesDir().toString(), GenericConstants.BETANOTES_DIRECTORY);
             directory.mkdirs();
             prefs.edit().putBoolean("firstrun", false).apply();
         }
@@ -75,13 +76,12 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        prefs = getSharedPreferences("sj.tool.betanote", MODE_PRIVATE);
-        Button btnHelp = findViewById(R.id.btnHelp);
+        prefs = getSharedPreferences(GenericConstants.PACKAGE_NAME, MODE_PRIVATE);
         ScrollView scrollViewLatest = findViewById(R.id.scrollViewLatest);
 
         // Recherche des fichiers texte
         FileFinder fileFinder = new FileFinder();
-        List<String> latest = fileFinder.findLatestNotes(getFilesDir().toString() + "/betanote_files");
+        List<String> latest = fileFinder.findLatestNotes(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY);
         LinearLayout linearLayoutLatest = new LinearLayout(this);
         linearLayoutLatest.setOrientation(LinearLayout.VERTICAL);
 
@@ -102,15 +102,6 @@ public class MainActivity extends AppCompatActivity
             });
         }
         scrollViewLatest.addView(linearLayoutLatest);
-
-        btnHelp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Bnote.class);
-                intent.putExtra("filenameAssets", "help.txt");
-                startActivity(intent);
-            }
-        });
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -156,9 +147,12 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_tools) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_help)
+        {
+            Intent intent = new Intent(MainActivity.this, Bnote.class);
+            intent.putExtra("filenameAssets", "help.txt");
+            startActivity(intent);
+        } else if (id == R.id.nav_about) {
 
         }
 

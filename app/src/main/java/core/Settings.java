@@ -61,8 +61,8 @@ public class Settings {
         if(settingsMap.containsKey(key))
         {
             settingsMap.remove(key);
-            settingsMap.put(key, value);
         }
+        settingsMap.put(key, value);
     }
 
     public String getNode(String key)

@@ -144,6 +144,10 @@ public class Bnote extends AppCompatActivity {
                             {
                                 settings.setNode("lastModification", Calendar.getInstance().getTime().toString());
                             }
+                            if(editTextTitle != null)
+                            {
+                                settings.setNode("title", editTextTitle.getText().toString());
+                            }
                             if(editTextBnote != null)
                             {
                                 String storeText = editTextBnote.getText().toString();
