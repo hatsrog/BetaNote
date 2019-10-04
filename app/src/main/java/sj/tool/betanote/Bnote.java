@@ -17,6 +17,7 @@ import java.util.Calendar;
 
 import core.DataAnalyzer;
 import core.Settings;
+import helper.GenericConstants;
 
 public class Bnote extends AppCompatActivity {
 
@@ -50,7 +51,7 @@ public class Bnote extends AppCompatActivity {
                 }
                 reader = new BufferedReader(
                         new InputStreamReader(getAssets().open(filenameAssets)));
-                settings = new Settings(DataAnalyzer.extractSettings(reader));
+                settings = new Settings(DataAnalyzer.extractSettingsAsString(reader));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -68,14 +69,14 @@ public class Bnote extends AppCompatActivity {
             editTextBnote.setText(null);
             BufferedReader br = null;
             try {
-                br = new BufferedReader(new FileReader(getFilesDir().toString() + "/betanote_files/"+filename));
+                br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+filename));
                 String bodyText = DataAnalyzer.extractBodyText(br);
                 if(bodyText != null)
                 {
                     editTextBnote.setText(bodyText);
                 }
-                br = new BufferedReader(new FileReader(getFilesDir().toString() + "/betanote_files/"+filename));
-                settings = new Settings(DataAnalyzer.extractSettings(br));
+                br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+filename));
+                settings = new Settings(DataAnalyzer.extractSettingsAsString(br));
             }
             catch (IOException e) {
                 //You'll need to add proper error handling here

@@ -24,7 +24,7 @@ public final class DataAnalyzer {
         return bodyText;
     }
 
-    public static String extractSettings(BufferedReader br) throws IOException {
+    public static String extractSettingsAsString(BufferedReader br) throws IOException {
         String line;
         Boolean endOfSettings = null;
         String strSettings = "";
@@ -44,5 +44,9 @@ public final class DataAnalyzer {
             }
         }
         return strSettings;
+    }
+
+    public static Settings extractSettings(BufferedReader br) throws IOException {
+        return new Settings(DataAnalyzer.extractSettingsAsString(br));
     }
 }

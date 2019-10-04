@@ -20,10 +20,16 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 
+import core.DataAnalyzer;
 import core.FileFinder;
+import core.Settings;
 import helper.GenericConstants;
 
 public class MainActivity extends AppCompatActivity
@@ -85,8 +91,40 @@ public class MainActivity extends AppCompatActivity
         LinearLayout linearLayoutLatest = new LinearLayout(this);
         linearLayoutLatest.setOrientation(LinearLayout.VERTICAL);
 
-        // Ajout d'un bouton par fichier texte trouvé
-        for (String latestFiles : latest) {
+        for (String latestFiles : latest)
+        {
+            BufferedReader br = null;
+            Settings settings = null;
+            String bodyText = "";
+            //! Créer un bouton plus évolué avec le titre, la date de modification et un apercu du texte
+            try
+            {
+                br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+latestFiles));
+                settings = DataAnalyzer.extractSettings(br);
+                br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+latestFiles));
+                bodyText = DataAnalyzer.extractBodyText(br);
+            }
+            catch (FileNotFoundException e)
+            {
+                e.printStackTrace();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            finally
+            {
+                try
+                {
+                    br.close();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            // Ajout d'un bouton par fichier texte trouvé
             final Button addButtonLatest = new Button(this);
             addButtonLatest.setText(latestFiles);
             linearLayoutLatest.addView(addButtonLatest);
