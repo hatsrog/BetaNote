@@ -10,9 +10,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -21,7 +24,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import core.DataAnalyzer;
 import core.FileFinder;
@@ -31,38 +39,22 @@ import helper.GenericConstants;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final int REQUEST_WRITE_PERMISSION = 1;
     SharedPreferences prefs = null;
+    List<Map<String, String>> allNotes = new ArrayList<>();
+    LinearLayout linearLayoutLatest;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (prefs.getBoolean("firstrun", true))
-        {
-            File directory = new File(getFilesDir().toString(), GenericConstants.BETANOTES_DIRECTORY);
-            directory.mkdirs();
-            prefs.edit().putBoolean("firstrun", false).apply();
-        }
-        else
-        {
-            prefs.edit().putBoolean("firstrun", false).apply();
-        }
+    public static boolean containsIgnoreCase(String str, String subString) {
+        return str.toLowerCase().contains(subString.toLowerCase());
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        prefs = getSharedPreferences(GenericConstants.PACKAGE_NAME, MODE_PRIVATE);
-        ScrollView scrollViewLatest = findViewById(R.id.scrollViewLatest);
-
+    public void printAllNotes()
+    {
         // Recherche des fichiers texte
         FileFinder fileFinder = new FileFinder();
         List<String> latest = fileFinder.findLatestNotes(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY);
-        LinearLayout linearLayoutLatest = new LinearLayout(this);
+        linearLayoutLatest = new LinearLayout(this);
         linearLayoutLatest.setOrientation(LinearLayout.VERTICAL);
-        int count = 0;
+        allNotes.clear();
 
         for (final String latestFiles : latest)
         {
@@ -75,7 +67,11 @@ public class MainActivity extends AppCompatActivity
                 settings = DataAnalyzer.extractSettings(br);
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+latestFiles));
                 bodyText = DataAnalyzer.extractBodyText(br, 50);
-                count++;
+                Map<String, String> note = new HashMap<>();
+                note.put("settings", settings.getSettingsAsString());
+                note.put("body", bodyText);
+                note.put("filename", latestFiles);
+                allNotes.add(note);
             }
             catch (FileNotFoundException e)
             {
@@ -115,6 +111,106 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (prefs.getBoolean("firstrun", true))
+        {
+            File directory = new File(getFilesDir().toString(), GenericConstants.BETANOTES_DIRECTORY);
+            directory.mkdirs();
+            prefs.edit().putBoolean("firstrun", false).apply();
+        }
+        else
+        {
+            prefs.edit().putBoolean("firstrun", false).apply();
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        prefs = getSharedPreferences(GenericConstants.PACKAGE_NAME, MODE_PRIVATE);
+        final ScrollView scrollViewLatest = findViewById(R.id.scrollViewLatest);
+        final EditText editTextSearch = findViewById(R.id.editTextSearch);
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                if(scrollViewLatest.getChildCount() > 0)
+                    scrollViewLatest.removeAllViews();
+            }
+
+            private Timer timer=new Timer();
+            private final long DELAY = 500;
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                timer.cancel();
+                timer = new Timer();
+                timer.schedule(
+                        new TimerTask()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run()
+                                    {
+                                        if(editTextSearch.getText().toString().trim().length() >= 2)
+                                        {
+                                            linearLayoutLatest = new LinearLayout(MainActivity.this);
+                                            linearLayoutLatest.setOrientation(LinearLayout.VERTICAL);
+                                            for(final Map<String, String> note : allNotes)
+                                            {
+                                                Settings settings = new Settings(note.get("settings"));
+                                                String bodyText = note.get("body");
+                                                if(containsIgnoreCase(settings.getNode("title"), editTextSearch.getText().toString()) || containsIgnoreCase(bodyText, editTextSearch.getText().toString()))
+                                                {
+                                                    final Button addButtonLatest = new Button(MainActivity.this);
+                                                    linearLayoutLatest.addView(addButtonLatest);
+                                                    addButtonLatest.setAllCaps(false);
+                                                    String buttonContent = settings.getNode("title") + "\n" + bodyText;
+                                                    addButtonLatest.setText(buttonContent);
+                                                    addButtonLatest.setOnClickListener(new View.OnClickListener()
+                                                    {
+                                                        public void onClick(View v)
+                                                        {
+                                                            Intent intent = new Intent(MainActivity.this, Bnote.class);
+                                                            intent.putExtra("filename", note.get("filename"));
+                                                            intent.putExtra("newFile", "false");
+                                                            startActivity(intent);
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                            scrollViewLatest.addView(linearLayoutLatest);
+                                        }
+                                        else
+                                        {
+                                            printAllNotes();
+
+                                            scrollViewLatest.addView(linearLayoutLatest);
+                                        }
+                                    }
+                                });
+                            }
+                        },
+                        DELAY
+                );
+            }
+        });
+
+        printAllNotes();
         scrollViewLatest.addView(linearLayoutLatest);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
