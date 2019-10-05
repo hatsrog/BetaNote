@@ -24,6 +24,29 @@ public final class DataAnalyzer {
         return bodyText;
     }
 
+    public static String extractBodyText(BufferedReader br, int limiter) throws IOException {
+        String line;
+        Boolean endOfSettings = false;
+        String bodyText = "";
+        while ((line = br.readLine()) != null)
+        {
+            if(endOfSettings)
+            {
+                bodyText += line + "\n";
+            }
+            if(line.trim().equals(">>"))
+            {
+                endOfSettings = true;
+                continue;
+            }
+            if(bodyText.length() >= limiter)
+            {
+                return bodyText.substring(0, limiter);
+            }
+        }
+        return bodyText;
+    }
+
     public static String extractSettingsAsString(BufferedReader br) throws IOException {
         String line;
         Boolean endOfSettings = null;

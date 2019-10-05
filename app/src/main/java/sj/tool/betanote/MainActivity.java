@@ -90,19 +90,20 @@ public class MainActivity extends AppCompatActivity
         List<String> latest = fileFinder.findLatestNotes(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY);
         LinearLayout linearLayoutLatest = new LinearLayout(this);
         linearLayoutLatest.setOrientation(LinearLayout.VERTICAL);
+        int count = 0;
 
-        for (String latestFiles : latest)
+        for (final String latestFiles : latest)
         {
             BufferedReader br = null;
             Settings settings = null;
             String bodyText = "";
-            //! Créer un bouton plus évolué avec le titre, la date de modification et un apercu du texte
             try
             {
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+latestFiles));
                 settings = DataAnalyzer.extractSettings(br);
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+latestFiles));
-                bodyText = DataAnalyzer.extractBodyText(br);
+                bodyText = DataAnalyzer.extractBodyText(br, 50);
+                count++;
             }
             catch (FileNotFoundException e)
             {
@@ -125,15 +126,18 @@ public class MainActivity extends AppCompatActivity
             }
 
             // Ajout d'un bouton par fichier texte trouvé
+            //! Tri les notes de la plus récente à la plus ancienne
             final Button addButtonLatest = new Button(this);
-            addButtonLatest.setText(latestFiles);
             linearLayoutLatest.addView(addButtonLatest);
+            addButtonLatest.setAllCaps(false);
+            String buttonContent = settings.getNode("title") + "\n" + bodyText;
+            addButtonLatest.setText(buttonContent);
             addButtonLatest.setOnClickListener(new View.OnClickListener()
             {
                 public void onClick(View v)
                 {
                     Intent intent = new Intent(MainActivity.this, Bnote.class);
-                    intent.putExtra("filename", addButtonLatest.getText());
+                    intent.putExtra("filename", latestFiles);
                     intent.putExtra("newFile", "false");
                     startActivity(intent);
                 }
