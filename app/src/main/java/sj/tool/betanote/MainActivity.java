@@ -1,5 +1,6 @@
 package sj.tool.betanote;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -61,13 +63,14 @@ public class MainActivity extends AppCompatActivity
             BufferedReader br = null;
             Settings settings = null;
             String bodyText = "";
+            final Map<String, String> note = new HashMap<>();
             try
             {
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+latestFiles));
                 settings = DataAnalyzer.extractSettings(br);
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+latestFiles));
                 bodyText = DataAnalyzer.extractBodyText(br, 50);
-                Map<String, String> note = new HashMap<>();
+
                 note.put("settings", settings.getSettingsAsString());
                 note.put("body", bodyText);
                 note.put("filename", latestFiles);
@@ -108,6 +111,29 @@ public class MainActivity extends AppCompatActivity
                     intent.putExtra("filename", latestFiles);
                     intent.putExtra("newFile", "false");
                     startActivity(intent);
+                }
+            });
+            addButtonLatest.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v)
+                {
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Suppression Note")
+                            .setMessage("Etes-vous sûr de vouloir supprimer cette note ?")
+
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    linearLayoutLatest.removeView(addButtonLatest);
+                                    allNotes.remove(note);
+                                    File fileToRemove = new File(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+latestFiles);
+                                    fileToRemove.delete();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, null)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                    return true;
                 }
             });
         }
@@ -198,7 +224,6 @@ public class MainActivity extends AppCompatActivity
                                         else
                                         {
                                             printAllNotes();
-
                                             scrollViewLatest.addView(linearLayoutLatest);
                                         }
                                     }
