@@ -24,6 +24,15 @@ public class Bnote extends AppCompatActivity {
     EditText editTextTitle = null;
     EditText editTextBnote = null;
     Settings settings = null;
+    String newFile = "";
+    String filename = "";
+
+    @Override
+    public void onBackPressed()
+    {
+        saveNote();
+        super.onBackPressed();
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +44,8 @@ public class Bnote extends AppCompatActivity {
         editTextBnote = findViewById(R.id.editTextBnote);
         editTextTitle = findViewById(R.id.editTextTitle);
         final String filenameAssets = intent.getStringExtra("filenameAssets");
-        final String filename = intent.getStringExtra("filename");
-        final String newFile = intent.getStringExtra("newFile");
+        filename = intent.getStringExtra("filename");
+        newFile = intent.getStringExtra("newFile");
 
         if (filenameAssets != null) {
             editTextBnote.setText(null);
@@ -116,55 +125,60 @@ public class Bnote extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(editTextBnote != null)
-                {
-                    try {
-                        if(newFile.equals("true")) {
-                            File directory = new File(getFilesDir().toString(), "betanote_files");
-                            String filename = Math.random() * 10000 + 1+".txt";
-                            File init = new File(getFilesDir().toString()+"/betanote_files", filename);
-                            Settings settingsNewFile = new Settings();
-                            init.createNewFile();
-                            settingsNewFile.createSettingsNodes();
-                            if(editTextTitle != null)
-                            {
-                                settingsNewFile.setNode("title", editTextTitle.getText().toString());
-                            }
-                            String createdSettings = settingsNewFile.getSettingsAsString();
-                            FileWriter writer = new FileWriter(init);
-                            writer.append(createdSettings);
-                            writer.append(editTextBnote.getText());
-                            writer.flush();
-                            writer.close();
-                        }
-                        else if(newFile.equals("false"))
-                        {
-                            //! Ouvrir le fichier et y remplacer par les modifications
-                            File init = new File(getFilesDir().toString()+"/betanote_files", filename);
-                            if(settings != null)
-                            {
-                                settings.setNode("lastModification", Calendar.getInstance().getTime().toString());
-                            }
-                            if(editTextTitle != null)
-                            {
-                                settings.setNode("title", editTextTitle.getText().toString());
-                            }
-                            if(editTextBnote != null)
-                            {
-                                String storeText = editTextBnote.getText().toString();
-                                FileWriter writer = new FileWriter(init);
-                                writer.write("");
-                                writer.append(settings.getSettingsAsString());
-                                writer.append(storeText);
-                                writer.flush();
-                                writer.close();
-                            }
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                saveNote();
             }
         });
     }
+
+    private void saveNote() {
+        if(editTextBnote != null)
+        {
+            try {
+                if(newFile.equals("true")) {
+                    File directory = new File(getFilesDir().toString(), "betanote_files");
+                    String filename = Math.random() * 10000 + 1+".txt";
+                    File init = new File(getFilesDir().toString()+"/betanote_files", filename);
+                    Settings settingsNewFile = new Settings();
+                    init.createNewFile();
+                    settingsNewFile.createSettingsNodes();
+                    if(editTextTitle != null)
+                    {
+                        settingsNewFile.setNode("title", editTextTitle.getText().toString());
+                    }
+                    String createdSettings = settingsNewFile.getSettingsAsString();
+                    FileWriter writer = new FileWriter(init);
+                    writer.append(createdSettings);
+                    writer.append(editTextBnote.getText());
+                    writer.flush();
+                    writer.close();
+                }
+                else if(newFile.equals("false"))
+                {
+                    //! Ouvrir le fichier et y remplacer par les modifications
+                    File init = new File(getFilesDir().toString()+"/betanote_files", filename);
+                    if(settings != null)
+                    {
+                        settings.setNode("lastModification", Calendar.getInstance().getTime().toString());
+                    }
+                    if(editTextTitle != null)
+                    {
+                        settings.setNode("title", editTextTitle.getText().toString());
+                    }
+                    if(editTextBnote != null)
+                    {
+                        String storeText = editTextBnote.getText().toString();
+                        FileWriter writer = new FileWriter(init);
+                        writer.write("");
+                        writer.append(settings.getSettingsAsString());
+                        writer.append(storeText);
+                        writer.flush();
+                        writer.close();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

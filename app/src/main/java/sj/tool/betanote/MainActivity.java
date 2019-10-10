@@ -274,20 +274,23 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_new_betanote)
+        {
+            Intent intent = new Intent(MainActivity.this, Bnote.class);
+            intent.putExtra("newFile", "true");
+            startActivity(intent);
+        }
+        else if (id == R.id.nav_settings)
+        {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_tools) {
-
-        } else if (id == R.id.nav_help)
+        }
+        else if (id == R.id.nav_help)
         {
             Intent intent = new Intent(MainActivity.this, Bnote.class);
             intent.putExtra("filenameAssets", "help.txt");
             startActivity(intent);
-        } else if (id == R.id.nav_about) {
+        }
+        else if (id == R.id.nav_about) {
 
         }
 
