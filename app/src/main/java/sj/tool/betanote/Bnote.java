@@ -3,8 +3,6 @@ package sj.tool.betanote;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import java.io.BufferedReader;
@@ -39,8 +37,6 @@ public class Bnote extends AppCompatActivity {
         setContentView(R.layout.bnote);
         Intent intent = getIntent();
 
-        Button btnExit = findViewById(R.id.btnExit);
-        Button btnSave = findViewById(R.id.btnSave);
         editTextBnote = findViewById(R.id.editTextBnote);
         editTextTitle = findViewById(R.id.editTextTitle);
         final String filenameAssets = intent.getStringExtra("filenameAssets");
@@ -113,21 +109,6 @@ public class Bnote extends AppCompatActivity {
                 editTextTitle.setEnabled(false);
             }
         }
-
-        btnExit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Bnote.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveNote();
-            }
-        });
     }
 
     private void saveNote() {
