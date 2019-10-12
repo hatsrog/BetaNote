@@ -23,7 +23,9 @@
         </activity>
         <activity android:name="sj.tool.betanote.Bnote"
                   android:theme="@style/AppTheme.NoActionBar">
-
+        </activity>
+        <activity android:name="sj.tool.betanote.About"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
