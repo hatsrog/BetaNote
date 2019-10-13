@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Calendar;
 
 import core.DataAnalyzer;
@@ -39,37 +38,9 @@ public class Bnote extends AppCompatActivity {
 
         editTextBnote = findViewById(R.id.editTextBnote);
         editTextTitle = findViewById(R.id.editTextTitle);
-        final String filenameAssets = intent.getStringExtra("filenameAssets");
         filename = intent.getStringExtra("filename");
         newFile = intent.getStringExtra("newFile");
 
-        if (filenameAssets != null) {
-            editTextBnote.setText(null);
-            BufferedReader reader = null;
-            try {
-                reader = new BufferedReader(
-                        new InputStreamReader(getAssets().open(filenameAssets)));
-                String bodyText = DataAnalyzer.extractBodyText(reader);
-                if(bodyText != null)
-                {
-                    editTextBnote.setText(bodyText);
-                }
-                reader = new BufferedReader(
-                        new InputStreamReader(getAssets().open(filenameAssets)));
-                settings = new Settings(DataAnalyzer.extractSettingsAsString(reader));
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        //log the exception
-                    }
-                }
-            }
-        }
         if (filename != null) {
             editTextBnote.setText(null);
             BufferedReader br = null;
@@ -116,26 +87,29 @@ public class Bnote extends AppCompatActivity {
         {
             try {
                 if(newFile.equals("true")) {
-                    File directory = new File(getFilesDir().toString(), "betanote_files");
-                    String filename = Math.random() * 10000 + 1+".txt";
-                    File init = new File(getFilesDir().toString()+"/betanote_files", filename);
+
                     Settings settingsNewFile = new Settings();
-                    init.createNewFile();
                     settingsNewFile.createSettingsNodes();
-                    if(editTextTitle != null)
+                    if(editTextTitle.getText().toString().trim().length() > 0)
                     {
                         settingsNewFile.setNode("title", editTextTitle.getText().toString());
                     }
-                    String createdSettings = settingsNewFile.getSettingsAsString();
-                    FileWriter writer = new FileWriter(init);
-                    writer.append(createdSettings);
-                    writer.append(editTextBnote.getText());
-                    writer.flush();
-                    writer.close();
+                    if(editTextBnote.getText().toString().trim().length() > 0)
+                    {
+                        new File(getFilesDir().toString(), "betanote_files");
+                        String filename = Math.random() * 10000 + 1+".txt";
+                        File init = new File(getFilesDir().toString()+"/betanote_files", filename);
+                        init.createNewFile();
+                        String createdSettings = settingsNewFile.getSettingsAsString();
+                        FileWriter writer = new FileWriter(init);
+                        writer.append(createdSettings);
+                        writer.append(editTextBnote.getText());
+                        writer.flush();
+                        writer.close();
+                    }
                 }
                 else if(newFile.equals("false"))
                 {
-                    //! Ouvrir le fichier et y remplacer par les modifications
                     File init = new File(getFilesDir().toString()+"/betanote_files", filename);
                     if(settings != null)
                     {

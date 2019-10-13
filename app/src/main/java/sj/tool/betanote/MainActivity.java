@@ -152,6 +152,12 @@ public class MainActivity extends AppCompatActivity
         {
             prefs.edit().putBoolean("firstrun", false).apply();
         }
+
+        final ScrollView scrollViewLatest = findViewById(R.id.scrollViewLatest);
+        printAllNotes();
+        if(scrollViewLatest.getChildCount() > 0)
+            scrollViewLatest.removeAllViews();
+        scrollViewLatest.addView(linearLayoutLatest);
     }
 
     @Override
@@ -235,9 +241,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        printAllNotes();
-        scrollViewLatest.addView(linearLayoutLatest);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -286,9 +289,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_help)
         {
-            Intent intent = new Intent(MainActivity.this, Bnote.class);
-            intent.putExtra("filenameAssets", "help.txt");
-            startActivity(intent);
+            //! Créer un nouvel Intent avec une aide dediée
         }
         else if (id == R.id.nav_about) {
             Intent intent = new Intent(MainActivity.this, About.class);
