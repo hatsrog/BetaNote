@@ -15,6 +15,7 @@ import java.util.Calendar;
 import core.DataAnalyzer;
 import core.Settings;
 import helper.GenericConstants;
+import helper.SettingsConstants;
 
 public class Bnote extends AppCompatActivity {
 
@@ -70,14 +71,9 @@ public class Bnote extends AppCompatActivity {
 
         if(settings != null)
         {
-            String getTitle = settings.getNode("title");
+            String getTitle = settings.getNode(SettingsConstants.KEY_TITLE);
             if (getTitle != null) {
                 editTextTitle.setText(getTitle);
-            }
-            String getEdit = settings.getNode("canEdit");
-            if (getEdit != null && getEdit.equals("0")) {
-                editTextBnote.setEnabled(false);
-                editTextTitle.setEnabled(false);
             }
         }
     }
@@ -92,13 +88,13 @@ public class Bnote extends AppCompatActivity {
                     settingsNewFile.createSettingsNodes();
                     if(editTextTitle.getText().toString().trim().length() > 0)
                     {
-                        settingsNewFile.setNode("title", editTextTitle.getText().toString());
+                        settingsNewFile.setNode(SettingsConstants.KEY_TITLE, editTextTitle.getText().toString());
                     }
                     if(editTextBnote.getText().toString().trim().length() > 0)
                     {
-                        new File(getFilesDir().toString(), "betanote_files");
+                        new File(getFilesDir().toString(), GenericConstants.BETANOTES_DIRECTORY);
                         String filename = Math.random() * 10000 + 1+".txt";
-                        File init = new File(getFilesDir().toString()+"/betanote_files", filename);
+                        File init = new File(getFilesDir().toString()+"/"+GenericConstants.BETANOTES_DIRECTORY, filename);
                         init.createNewFile();
                         String createdSettings = settingsNewFile.getSettingsAsString();
                         FileWriter writer = new FileWriter(init);
@@ -110,14 +106,14 @@ public class Bnote extends AppCompatActivity {
                 }
                 else if(newFile.equals("false"))
                 {
-                    File init = new File(getFilesDir().toString()+"/betanote_files", filename);
+                    File init = new File(getFilesDir().toString()+"/"+GenericConstants.BETANOTES_DIRECTORY, filename);
                     if(settings != null)
                     {
-                        settings.setNode("lastModification", Calendar.getInstance().getTime().toString());
+                        settings.setNode(SettingsConstants.KEY_LASTMODIFICATION, Calendar.getInstance().getTime().toString());
                     }
                     if(editTextTitle != null)
                     {
-                        settings.setNode("title", editTextTitle.getText().toString());
+                        settings.setNode(SettingsConstants.KEY_TITLE, editTextTitle.getText().toString());
                     }
                     if(editTextBnote != null)
                     {

@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -136,6 +137,13 @@ public class MainActivity extends AppCompatActivity
                     return true;
                 }
             });
+        }
+        if(linearLayoutLatest.getChildCount() == 0)
+        {
+            TextView txtNoNoteFound = new TextView(this);
+            txtNoNoteFound.setTextSize(30);
+            txtNoNoteFound.setText("Aucune note trouvée, vous pouvez en créer une en appuyant sur le +");
+            linearLayoutLatest.addView(txtNoNoteFound);
         }
     }
 
