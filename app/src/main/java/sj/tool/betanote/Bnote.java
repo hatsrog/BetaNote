@@ -13,7 +13,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.Calendar;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 import core.DataAnalyzer;
 import core.Settings;
@@ -179,4 +183,25 @@ public class Bnote extends AppCompatActivity {
         }
     }
 
+    private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception {
+        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+        return cipher.doFinal(clear);
+    }
+
+    private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
+        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+        return cipher.doFinal(encrypted);
+    }
+
+    public static String getSalt() throws Exception {
+
+        SecureRandom sr = SecureRandom.getInstance("PBKDF2WithHmacSHA1");
+        byte[] salt = new byte[20];
+        sr.nextBytes(salt);
+        return new String(salt);
+    }
 }
