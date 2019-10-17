@@ -97,13 +97,29 @@ public class Bnote extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_nosave) {
-            return true;
+        if (id == R.id.action_nosave)
+        {
+            Intent intent = new Intent(Bnote.this, MainActivity.class);
+            startActivity(intent);
         }
         else if(id == R.id.action_encrypt)
         {
-            return true;
+            String encryptNode = settings.getNode(SettingsConstants.KEY_ENCRYPT);
+            if(encryptNode == null)
+            {
+                settings.setNode(SettingsConstants.KEY_ENCRYPT, GenericConstants.EMPTY_STRING);
+                encryptNode = "0";
+            }
+            if(encryptNode.equals("0"))
+            {
+                //! Ouvrir une popup et demander un mot de passe de chiffrement et passer encryptNode à 1
+                //settings.setNode(SettingsConstants.KEY_ENCRYPT, "1");
+            }
+            else if(encryptNode.equals("1"))
+            {
+                //! Stocker le texte en clair, passer encryotNode à 0
+                //settings.setNode(SettingsConstants.KEY_ENCRYPT, "1");
+            }
         }
 
         return super.onOptionsItemSelected(item);

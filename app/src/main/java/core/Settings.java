@@ -53,6 +53,8 @@ public class Settings {
         settingsMap.put("title", "");
         settingsMap.put("creationDate", Calendar.getInstance().getTime().toString());
         settingsMap.put("lastModification", Calendar.getInstance().getTime().toString());
+        settingsMap.put("encrypt", "0");
+        settingsMap.put("encryptSalt", "");
     }
 
     public void setNode(String key, String value)
