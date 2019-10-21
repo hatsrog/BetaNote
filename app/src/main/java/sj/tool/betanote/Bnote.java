@@ -1,9 +1,12 @@
 package sj.tool.betanote;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -111,13 +114,37 @@ public class Bnote extends AppCompatActivity {
             String encryptNode = settings.getNode(SettingsConstants.KEY_ENCRYPT);
             if(encryptNode == null)
             {
-                settings.setNode(SettingsConstants.KEY_ENCRYPT, GenericConstants.EMPTY_STRING);
+                settings.setNode(SettingsConstants.KEY_ENCRYPT, "0");
                 encryptNode = "0";
             }
             if(encryptNode.equals("0"))
             {
-                //! Ouvrir une popup et demander un mot de passe de chiffrement et passer encryptNode à 1
-                //settings.setNode(SettingsConstants.KEY_ENCRYPT, "1");
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Mot de passe");
+
+                final EditText input = new EditText(this);
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                builder.setView(input);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String password = input.getText().toString().trim();
+                        if(!password.equals(""))
+                        {
+                            settings.setNode(SettingsConstants.KEY_ENCRYPT, "1");
+                            dialog.cancel();
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
             }
             else if(encryptNode.equals("1"))
             {
