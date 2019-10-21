@@ -59,13 +59,42 @@ public class Bnote extends AppCompatActivity {
             BufferedReader br = null;
             try {
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+filename));
+                settings = new Settings(DataAnalyzer.extractSettingsAsString(br));
+                br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+filename));
                 String bodyText = DataAnalyzer.extractBodyText(br);
-                if(bodyText != null)
+
+                if(settings.getNode(SettingsConstants.KEY_ENCRYPT) != null && settings.getNode(SettingsConstants.KEY_ENCRYPT).equals("1"))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Mot de passe");
+
+                    final EditText input = new EditText(this);
+                    input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    builder.setView(input);
+
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String password = input.getText().toString().trim();
+                            if(!password.equals(""))
+                            {
+                                //! Decryptez le texte avec la clé entrée
+                            }
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+                }
+                else if(bodyText != null)
                 {
                     editTextBnote.setText(bodyText);
                 }
-                br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+filename));
-                settings = new Settings(DataAnalyzer.extractSettingsAsString(br));
             }
             catch (IOException e) {
                 //You'll need to add proper error handling here
@@ -132,6 +161,14 @@ public class Bnote extends AppCompatActivity {
                         String password = input.getText().toString().trim();
                         if(!password.equals(""))
                         {
+                            try
+                            {
+                                settings.setNode(SettingsConstants.KEY_ENCRYPTSALT, getSalt());
+                            }
+                            catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
                             settings.setNode(SettingsConstants.KEY_ENCRYPT, "1");
                             dialog.cancel();
                         }
