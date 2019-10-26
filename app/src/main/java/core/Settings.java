@@ -77,4 +77,15 @@ public class Settings {
         }
         return returnedValue;
     }
+
+    public boolean nodeExists(String key)
+    {
+        boolean exists = false;
+        String node = getNode(key);
+        if(node != null && !node.equals(""))
+        {
+            exists = true;
+        }
+        return exists;
+    }
 }

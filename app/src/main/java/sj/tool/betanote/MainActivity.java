@@ -3,6 +3,8 @@ package sj.tool.betanote;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -16,7 +18,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -38,6 +39,7 @@ import core.DataAnalyzer;
 import core.FileFinder;
 import core.Settings;
 import helper.GenericConstants;
+import helper.SettingsConstants;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -99,22 +101,36 @@ public class MainActivity extends AppCompatActivity
 
             // Ajout d'un bouton par fichier texte trouvé
             //! Tri les notes de la plus récente à la plus ancienne
-            final Button addButtonLatest = new Button(this);
-            linearLayoutLatest.addView(addButtonLatest);
-            addButtonLatest.setAllCaps(false);
-            String buttonContent = settings.getNode("title") + "\n" + bodyText;
-            addButtonLatest.setText(buttonContent);
-            addButtonLatest.setOnClickListener(new View.OnClickListener()
+            final LinearLayout linearLayoutNote = new LinearLayout(MainActivity.this);
+            linearLayoutNote.setOrientation(LinearLayout.VERTICAL);
+            linearLayoutNote.setBackgroundColor(Color.rgb(254,238,234));
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(50, 50, 50, 0);
+            if(settings.nodeExists(SettingsConstants.KEY_TITLE))
+            {
+                TextView txtViewTitle = new TextView(MainActivity.this);
+                txtViewTitle.setText(settings.getNode(SettingsConstants.KEY_TITLE));
+                txtViewTitle.setTypeface(null, Typeface.BOLD);
+                txtViewTitle.setTextSize(30);
+                linearLayoutNote.addView(txtViewTitle);
+            }
+            TextView txtViewBody = new TextView(MainActivity.this);
+            txtViewBody.setText(bodyText);
+            txtViewBody.setTextSize(20);
+            linearLayoutNote.addView(txtViewBody);
+            MainActivity.this.linearLayoutLatest.addView(linearLayoutNote, layoutParams);
+            linearLayoutNote.setOnClickListener(new View.OnClickListener()
             {
                 public void onClick(View v)
                 {
                     Intent intent = new Intent(MainActivity.this, Bnote.class);
-                    intent.putExtra("filename", latestFiles);
+                    intent.putExtra("filename", note.get("filename"));
                     intent.putExtra("newFile", "false");
                     startActivity(intent);
                 }
             });
-            addButtonLatest.setOnLongClickListener(new View.OnLongClickListener() {
+            linearLayoutNote.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v)
                 {
@@ -125,7 +141,7 @@ public class MainActivity extends AppCompatActivity
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which)
                                 {
-                                    linearLayoutLatest.removeView(addButtonLatest);
+                                    linearLayoutLatest.removeView(linearLayoutNote);
                                     allNotes.remove(note);
                                     File fileToRemove = new File(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+latestFiles);
                                     fileToRemove.delete();
@@ -214,14 +230,28 @@ public class MainActivity extends AppCompatActivity
                                             {
                                                 Settings settings = new Settings(note.get("settings"));
                                                 String bodyText = note.get("body");
-                                                if(containsIgnoreCase(settings.getNode("title"), editTextSearch.getText().toString()) || containsIgnoreCase(bodyText, editTextSearch.getText().toString()))
+                                                if((settings.nodeExists(SettingsConstants.KEY_TITLE) && containsIgnoreCase(settings.getNode("title"), editTextSearch.getText().toString())) || containsIgnoreCase(bodyText, editTextSearch.getText().toString()))
                                                 {
-                                                    final Button addButtonLatest = new Button(MainActivity.this);
-                                                    linearLayoutLatest.addView(addButtonLatest);
-                                                    addButtonLatest.setAllCaps(false);
-                                                    String buttonContent = settings.getNode("title") + "\n" + bodyText;
-                                                    addButtonLatest.setText(buttonContent);
-                                                    addButtonLatest.setOnClickListener(new View.OnClickListener()
+                                                    final LinearLayout linearLayoutNote = new LinearLayout(MainActivity.this);
+                                                    linearLayoutNote.setOrientation(LinearLayout.VERTICAL);
+                                                    linearLayoutNote.setBackgroundColor(Color.rgb(254,238,234));
+                                                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                                            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                                    layoutParams.setMargins(50, 50, 50, 0);
+                                                    if(settings.nodeExists(SettingsConstants.KEY_TITLE))
+                                                    {
+                                                        TextView txtViewTitle = new TextView(MainActivity.this);
+                                                        txtViewTitle.setText(settings.getNode(SettingsConstants.KEY_TITLE));
+                                                        txtViewTitle.setTypeface(null, Typeface.BOLD);
+                                                        txtViewTitle.setTextSize(30);
+                                                        linearLayoutNote.addView(txtViewTitle);
+                                                    }
+                                                    TextView txtViewBody = new TextView(MainActivity.this);
+                                                    txtViewBody.setText(bodyText);
+                                                    txtViewBody.setTextSize(20);
+                                                    linearLayoutNote.addView(txtViewBody);
+                                                    MainActivity.this.linearLayoutLatest.addView(linearLayoutNote, layoutParams);
+                                                    linearLayoutNote.setOnClickListener(new View.OnClickListener()
                                                     {
                                                         public void onClick(View v)
                                                         {
@@ -229,6 +259,29 @@ public class MainActivity extends AppCompatActivity
                                                             intent.putExtra("filename", note.get("filename"));
                                                             intent.putExtra("newFile", "false");
                                                             startActivity(intent);
+                                                        }
+                                                    });
+                                                    linearLayoutNote.setOnLongClickListener(new View.OnLongClickListener() {
+                                                        @Override
+                                                        public boolean onLongClick(View v)
+                                                        {
+                                                            new AlertDialog.Builder(MainActivity.this)
+                                                                    .setTitle("Suppression Note")
+                                                                    .setMessage("Etes-vous sûr de vouloir supprimer cette note ?")
+
+                                                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int which)
+                                                                        {
+                                                                            linearLayoutLatest.removeView(linearLayoutNote);
+                                                                            allNotes.remove(note);
+                                                                            File fileToRemove = new File(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+note.get("filename"));
+                                                                            fileToRemove.delete();
+                                                                        }
+                                                                    })
+                                                                    .setNegativeButton(android.R.string.no, null)
+                                                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                                                    .show();
+                                                            return true;
                                                         }
                                                     });
                                                 }
