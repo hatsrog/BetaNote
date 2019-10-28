@@ -2,6 +2,7 @@ package sj.tool.betanote;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import core.DataAnalyzer;
 import core.Settings;
 import helper.GenericConstants;
 import helper.SettingsConstants;
+import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class Bnote extends AppCompatActivity {
 
@@ -63,7 +65,7 @@ public class Bnote extends AppCompatActivity {
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+filename));
                 String bodyText = DataAnalyzer.extractBodyText(br);
 
-                if(settings.getNode(SettingsConstants.KEY_ENCRYPT) != null && settings.getNode(SettingsConstants.KEY_ENCRYPT).equals("1"))
+                if(settings.getNode(SettingsConstants.ENCRYPT) != null && settings.getNode(SettingsConstants.ENCRYPT).equals("1"))
                 {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Mot de passe");
@@ -112,7 +114,7 @@ public class Bnote extends AppCompatActivity {
 
         if(settings != null)
         {
-            String getTitle = settings.getNode(SettingsConstants.KEY_TITLE);
+            String getTitle = settings.getNode(SettingsConstants.TITLE);
             if (getTitle != null) {
                 editTextTitle.setText(getTitle);
             }
@@ -140,10 +142,10 @@ public class Bnote extends AppCompatActivity {
         }
         else if(id == R.id.action_encrypt)
         {
-            String encryptNode = settings.getNode(SettingsConstants.KEY_ENCRYPT);
+            String encryptNode = settings.getNode(SettingsConstants.ENCRYPT);
             if(encryptNode == null)
             {
-                settings.setNode(SettingsConstants.KEY_ENCRYPT, "0");
+                settings.setNode(SettingsConstants.ENCRYPT, "0");
                 encryptNode = "0";
             }
             if(encryptNode.equals("0"))
@@ -163,13 +165,13 @@ public class Bnote extends AppCompatActivity {
                         {
                             try
                             {
-                                settings.setNode(SettingsConstants.KEY_ENCRYPTSALT, getSalt());
+                                settings.setNode(SettingsConstants.ENCRYPTSALT, getSalt());
                             }
                             catch (Exception e)
                             {
                                 e.printStackTrace();
                             }
-                            settings.setNode(SettingsConstants.KEY_ENCRYPT, "1");
+                            settings.setNode(SettingsConstants.ENCRYPT, "1");
                             dialog.cancel();
                         }
                     }
@@ -186,10 +188,41 @@ public class Bnote extends AppCompatActivity {
             else if(encryptNode.equals("1"))
             {
                 //! Stocker le texte en clair, passer encryotNode à 0
-                //settings.setNode(SettingsConstants.KEY_ENCRYPT, "1");
+                //settings.setNode(SettingsConstants.ENCRYPT, "1");
             }
         }
+        else if(id == R.id.action_backgroundcolor)
+        {
+            AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, Color.WHITE, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+                @Override
+                public void onOk(AmbilWarnaDialog dialog, int color) {
+                    // color is the color selected by the user.
+                }
 
+                @Override
+                public void onCancel(AmbilWarnaDialog dialog) {
+                    // cancel was selected by the user
+                }
+
+            });
+            dialog.show();
+        }
+        else if(id == R.id.action_fontcolor)
+        {
+            AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, Color.BLACK, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+                @Override
+                public void onOk(AmbilWarnaDialog dialog, int color) {
+                    // color is the color selected by the user.
+                }
+
+                @Override
+                public void onCancel(AmbilWarnaDialog dialog) {
+                    // cancel was selected by the user
+                }
+
+            });
+            dialog.show();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -203,7 +236,7 @@ public class Bnote extends AppCompatActivity {
                     settingsNewFile.createSettingsNodes();
                     if(editTextTitle.getText().toString().trim().length() > 0)
                     {
-                        settingsNewFile.setNode(SettingsConstants.KEY_TITLE, editTextTitle.getText().toString());
+                        settingsNewFile.setNode(SettingsConstants.TITLE, editTextTitle.getText().toString());
                     }
                     if(editTextBnote.getText().toString().trim().length() > 0)
                     {
@@ -224,11 +257,11 @@ public class Bnote extends AppCompatActivity {
                     File init = new File(getFilesDir().toString()+"/"+GenericConstants.BETANOTES_DIRECTORY, filename);
                     if(settings != null)
                     {
-                        settings.setNode(SettingsConstants.KEY_LASTMODIFICATION, Calendar.getInstance().getTime().toString());
+                        settings.setNode(SettingsConstants.LASTMODIFICATION, Calendar.getInstance().getTime().toString());
                     }
                     if(editTextTitle != null)
                     {
-                        settings.setNode(SettingsConstants.KEY_TITLE, editTextTitle.getText().toString());
+                        settings.setNode(SettingsConstants.TITLE, editTextTitle.getText().toString());
                     }
                     if(editTextBnote != null)
                     {

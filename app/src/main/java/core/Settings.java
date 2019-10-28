@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import helper.SettingsConstants;
+
 public class Settings {
 
     private Map<String, String> settingsMap;
@@ -50,11 +52,13 @@ public class Settings {
 
     public void createSettingsNodes()
     {
-        settingsMap.put("title", "");
-        settingsMap.put("creationDate", Calendar.getInstance().getTime().toString());
-        settingsMap.put("lastModification", Calendar.getInstance().getTime().toString());
-        settingsMap.put("encrypt", "0");
-        settingsMap.put("encryptSalt", "");
+        settingsMap.put(SettingsConstants.TITLE, "");
+        settingsMap.put(SettingsConstants.CREATIONDATE, Calendar.getInstance().getTime().toString());
+        settingsMap.put(SettingsConstants.LASTMODIFICATION, Calendar.getInstance().getTime().toString());
+        settingsMap.put(SettingsConstants.ENCRYPT, "0");
+        settingsMap.put(SettingsConstants.ENCRYPTSALT, "");
+        settingsMap.put(SettingsConstants.BACKGROUNDCOLOR, "white");
+        settingsMap.put(SettingsConstants.FONTCOLOR, "black");
     }
 
     public void setNode(String key, String value)

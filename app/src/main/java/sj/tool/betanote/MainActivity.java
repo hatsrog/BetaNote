@@ -107,10 +107,10 @@ public class MainActivity extends AppCompatActivity
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(50, 50, 50, 0);
-            if(settings.nodeExists(SettingsConstants.KEY_TITLE))
+            if(settings.nodeExists(SettingsConstants.TITLE))
             {
                 TextView txtViewTitle = new TextView(MainActivity.this);
-                txtViewTitle.setText(settings.getNode(SettingsConstants.KEY_TITLE));
+                txtViewTitle.setText(settings.getNode(SettingsConstants.TITLE));
                 txtViewTitle.setTypeface(null, Typeface.BOLD);
                 txtViewTitle.setTextSize(30);
                 linearLayoutNote.addView(txtViewTitle);
@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity
                                             {
                                                 Settings settings = new Settings(note.get("settings"));
                                                 String bodyText = note.get("body");
-                                                if((settings.nodeExists(SettingsConstants.KEY_TITLE) && containsIgnoreCase(settings.getNode("title"), editTextSearch.getText().toString())) || containsIgnoreCase(bodyText, editTextSearch.getText().toString()))
+                                                if((settings.nodeExists(SettingsConstants.TITLE) && containsIgnoreCase(settings.getNode("title"), editTextSearch.getText().toString())) || containsIgnoreCase(bodyText, editTextSearch.getText().toString()))
                                                 {
                                                     final LinearLayout linearLayoutNote = new LinearLayout(MainActivity.this);
                                                     linearLayoutNote.setOrientation(LinearLayout.VERTICAL);
@@ -238,10 +238,10 @@ public class MainActivity extends AppCompatActivity
                                                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                                                             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                                     layoutParams.setMargins(50, 50, 50, 0);
-                                                    if(settings.nodeExists(SettingsConstants.KEY_TITLE))
+                                                    if(settings.nodeExists(SettingsConstants.TITLE))
                                                     {
                                                         TextView txtViewTitle = new TextView(MainActivity.this);
-                                                        txtViewTitle.setText(settings.getNode(SettingsConstants.KEY_TITLE));
+                                                        txtViewTitle.setText(settings.getNode(SettingsConstants.TITLE));
                                                         txtViewTitle.setTypeface(null, Typeface.BOLD);
                                                         txtViewTitle.setTextSize(30);
                                                         linearLayoutNote.addView(txtViewTitle);
