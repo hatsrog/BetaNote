@@ -95,6 +95,30 @@ public class Bnote extends AppCompatActivity {
                 }
                 else if(bodyText != null)
                 {
+                    if(settings.nodeExists(SettingsConstants.FONTCOLOR))
+                    {
+                        try
+                        {
+                            int fontcolor = Integer.parseInt(settings.getNode(SettingsConstants.FONTCOLOR));
+                            editTextBnote.setTextColor(fontcolor);
+                        }
+                        catch(NumberFormatException ex)
+                        {
+                            System.out.println(ex.getMessage());
+                        }
+                    }
+                    if(settings.nodeExists(SettingsConstants.BACKGROUNDCOLOR))
+                    {
+                        try
+                        {
+                            int backgroundcolor = Integer.parseInt(settings.getNode(SettingsConstants.BACKGROUNDCOLOR));
+                            editTextBnote.setBackgroundColor(backgroundcolor);
+                        }
+                        catch(NumberFormatException ex)
+                        {
+                            System.out.println(ex.getMessage());
+                        }
+                    }
                     editTextBnote.setText(bodyText);
                 }
             }
@@ -114,10 +138,15 @@ public class Bnote extends AppCompatActivity {
 
         if(settings != null)
         {
-            String getTitle = settings.getNode(SettingsConstants.TITLE);
-            if (getTitle != null) {
-                editTextTitle.setText(getTitle);
+            if(settings.nodeExists(SettingsConstants.TITLE))
+            {
+                editTextTitle.setText(settings.getNode(SettingsConstants.TITLE));
             }
+        }
+        else
+        {
+            settings = new Settings();
+            settings.createSettingsNodes();
         }
     }
 
@@ -196,7 +225,8 @@ public class Bnote extends AppCompatActivity {
             AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, Color.WHITE, new AmbilWarnaDialog.OnAmbilWarnaListener() {
                 @Override
                 public void onOk(AmbilWarnaDialog dialog, int color) {
-                    // color is the color selected by the user.
+                    editTextBnote.setBackgroundColor(color);
+                    settings.setNode(SettingsConstants.BACKGROUNDCOLOR, color);
                 }
 
                 @Override
@@ -212,7 +242,8 @@ public class Bnote extends AppCompatActivity {
             AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, Color.BLACK, new AmbilWarnaDialog.OnAmbilWarnaListener() {
                 @Override
                 public void onOk(AmbilWarnaDialog dialog, int color) {
-                    // color is the color selected by the user.
+                    editTextBnote.setTextColor(color);
+                    settings.setNode(SettingsConstants.FONTCOLOR, color);
                 }
 
                 @Override
@@ -232,24 +263,25 @@ public class Bnote extends AppCompatActivity {
             try {
                 if(newFile.equals("true")) {
 
-                    Settings settingsNewFile = new Settings();
-                    settingsNewFile.createSettingsNodes();
-                    if(editTextTitle.getText().toString().trim().length() > 0)
+                    if(settings != null)
                     {
-                        settingsNewFile.setNode(SettingsConstants.TITLE, editTextTitle.getText().toString());
-                    }
-                    if(editTextBnote.getText().toString().trim().length() > 0)
-                    {
-                        new File(getFilesDir().toString(), GenericConstants.BETANOTES_DIRECTORY);
-                        String filename = Math.random() * 10000 + 1+".txt";
-                        File init = new File(getFilesDir().toString()+"/"+GenericConstants.BETANOTES_DIRECTORY, filename);
-                        init.createNewFile();
-                        String createdSettings = settingsNewFile.getSettingsAsString();
-                        FileWriter writer = new FileWriter(init);
-                        writer.append(createdSettings);
-                        writer.append(editTextBnote.getText());
-                        writer.flush();
-                        writer.close();
+                        if(editTextTitle.getText().toString().trim().length() > 0)
+                        {
+                            settings.setNode(SettingsConstants.TITLE, editTextTitle.getText().toString());
+                        }
+                        if(editTextBnote.getText().toString().trim().length() > 0)
+                        {
+                            new File(getFilesDir().toString(), GenericConstants.BETANOTES_DIRECTORY);
+                            String filename = Math.random() * 10000 + 1+".txt";
+                            File init = new File(getFilesDir().toString()+"/"+GenericConstants.BETANOTES_DIRECTORY, filename);
+                            init.createNewFile();
+                            String createdSettings = settings.getSettingsAsString();
+                            FileWriter writer = new FileWriter(init);
+                            writer.append(createdSettings);
+                            writer.append(editTextBnote.getText());
+                            writer.flush();
+                            writer.close();
+                        }
                     }
                 }
                 else if(newFile.equals("false"))

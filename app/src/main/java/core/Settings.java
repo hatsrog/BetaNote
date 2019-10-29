@@ -57,17 +57,17 @@ public class Settings {
         settingsMap.put(SettingsConstants.LASTMODIFICATION, Calendar.getInstance().getTime().toString());
         settingsMap.put(SettingsConstants.ENCRYPT, "0");
         settingsMap.put(SettingsConstants.ENCRYPTSALT, "");
-        settingsMap.put(SettingsConstants.BACKGROUNDCOLOR, "white");
-        settingsMap.put(SettingsConstants.FONTCOLOR, "black");
+        settingsMap.put(SettingsConstants.BACKGROUNDCOLOR, "");
+        settingsMap.put(SettingsConstants.FONTCOLOR, "");
     }
 
-    public void setNode(String key, String value)
+    public void setNode(String key, Object value)
     {
         if(settingsMap.containsKey(key))
         {
             settingsMap.remove(key);
         }
-        settingsMap.put(key, value);
+        settingsMap.put(key, value.toString());
     }
 
     public String getNode(String key)
