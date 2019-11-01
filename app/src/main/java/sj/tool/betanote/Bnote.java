@@ -18,7 +18,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.security.SecureRandom;
-import java.util.Calendar;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -28,6 +27,8 @@ import core.Settings;
 import helper.GenericConstants;
 import helper.SettingsConstants;
 import yuku.ambilwarna.AmbilWarnaDialog;
+
+import static helper.DateTime.getDateTime;
 
 public class Bnote extends AppCompatActivity {
 
@@ -289,7 +290,7 @@ public class Bnote extends AppCompatActivity {
                     File init = new File(getFilesDir().toString()+"/"+GenericConstants.BETANOTES_DIRECTORY, filename);
                     if(settings != null)
                     {
-                        settings.setNode(SettingsConstants.LASTMODIFICATION, Calendar.getInstance().getTime().toString());
+                        settings.setNode(SettingsConstants.LASTMODIFICATION, getDateTime());
                     }
                     if(editTextTitle != null)
                     {

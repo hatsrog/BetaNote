@@ -74,6 +74,13 @@ public class MainActivity extends AppCompatActivity
         txtViewBody.setText(bodyText);
         txtViewBody.setTextSize(20);
         linearLayoutNote.addView(txtViewBody);
+        if(settings.nodeExists(SettingsConstants.LASTMODIFICATION))
+        {
+            TextView txtViewLastModification = new TextView(MainActivity.this);
+            txtViewLastModification.setText(settings.getNode(SettingsConstants.LASTMODIFICATION));
+            txtViewLastModification.setTextSize(15);
+            linearLayoutNote.addView(txtViewLastModification);
+        }
         MainActivity.this.linearLayoutLatest.addView(linearLayoutNote, layoutParams);
         linearLayoutNote.setOnClickListener(new View.OnClickListener()
         {

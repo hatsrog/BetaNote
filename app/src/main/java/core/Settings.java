@@ -1,10 +1,11 @@
 package core;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 import helper.SettingsConstants;
+
+import static helper.DateTime.getDateTime;
 
 public class Settings {
 
@@ -53,8 +54,8 @@ public class Settings {
     public void createSettingsNodes()
     {
         settingsMap.put(SettingsConstants.TITLE, "");
-        settingsMap.put(SettingsConstants.CREATIONDATE, Calendar.getInstance().getTime().toString());
-        settingsMap.put(SettingsConstants.LASTMODIFICATION, Calendar.getInstance().getTime().toString());
+        settingsMap.put(SettingsConstants.CREATIONDATE, getDateTime());
+        settingsMap.put(SettingsConstants.LASTMODIFICATION, getDateTime());
         settingsMap.put(SettingsConstants.ENCRYPT, "0");
         settingsMap.put(SettingsConstants.ENCRYPTSALT, "");
         settingsMap.put(SettingsConstants.BACKGROUNDCOLOR, "");
