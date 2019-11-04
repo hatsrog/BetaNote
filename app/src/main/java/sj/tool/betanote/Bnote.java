@@ -273,7 +273,7 @@ public class Bnote extends AppCompatActivity {
                         if(editTextBnote.getText().toString().trim().length() > 0)
                         {
                             new File(getFilesDir().toString(), GenericConstants.BETANOTES_DIRECTORY);
-                            String filename = Math.random() * 10000 + 1+".txt";
+                            String filename = getDateTime("yyyyMMddHHmmss")+".txt";
                             File init = new File(getFilesDir().toString()+"/"+GenericConstants.BETANOTES_DIRECTORY, filename);
                             init.createNewFile();
                             String createdSettings = settings.getSettingsAsString();

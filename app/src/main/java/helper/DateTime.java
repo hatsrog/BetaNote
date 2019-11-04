@@ -6,10 +6,15 @@ import java.util.Locale;
 
 public class DateTime
 {
-    public static final String getDateTime()
+    public static String getDateTime()
     {
-        String dateTime = "";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
+        return sdf.format(new Date());
+    }
+
+    public static String getDateTime(String pattern)
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.getDefault());
         return sdf.format(new Date());
     }
 }
