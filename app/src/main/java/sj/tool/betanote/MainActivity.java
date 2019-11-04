@@ -308,7 +308,8 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_settings)
         {
-
+            Intent intent = new Intent(MainActivity.this, GeneralSettings.class);
+            startActivity(intent);
         }
         else if (id == R.id.nav_help)
         {
