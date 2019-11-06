@@ -58,7 +58,12 @@ public class GeneralSettings extends AppCompatActivity implements NavigationView
     {
         int id = menuItem.getItemId();
 
-        if (id == R.id.nav_new_betanote)
+        if(id == R.id.nav_homepage)
+        {
+            Intent intent = new Intent(GeneralSettings.this, MainActivity.class);
+            startActivity(intent);
+        }
+        else if (id == R.id.nav_new_betanote)
         {
             Intent intent = new Intent(GeneralSettings.this, Bnote.class);
             intent.putExtra("newFile", "true");
@@ -67,7 +72,9 @@ public class GeneralSettings extends AppCompatActivity implements NavigationView
         else if (id == R.id.nav_settings)
         {
             Intent intent = new Intent(GeneralSettings.this, GeneralSettings.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
             startActivity(intent);
+            this.finish();
         }
         else if (id == R.id.nav_help)
         {

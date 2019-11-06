@@ -300,7 +300,14 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_new_betanote)
+        if(id == R.id.nav_homepage)
+        {
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+            startActivity(intent);
+            this.finish();
+        }
+        else if (id == R.id.nav_new_betanote)
         {
             Intent intent = new Intent(MainActivity.this, Bnote.class);
             intent.putExtra("newFile", "true");
