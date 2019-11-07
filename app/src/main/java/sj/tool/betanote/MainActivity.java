@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
         linearLayoutNote.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v)
-            {
+            {0
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle("Suppression Note")
                         .setMessage("Etes-vous sûr de vouloir supprimer cette note ?")

@@ -12,10 +12,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
+import core.DataAnalyzer;
 import core.FileFinder;
+import core.Settings;
 import helper.GenericConstants;
 
 public class GeneralSettings extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -33,6 +38,34 @@ public class GeneralSettings extends AppCompatActivity implements NavigationView
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        BufferedReader reader = null;
+        Settings settings;
+        try
+        {
+            reader = new BufferedReader(
+                    new InputStreamReader(getAssets().open(GenericConstants.GENERAL_SETTINGS_FILE)));
+
+            settings = DataAnalyzer.extractSettings(reader);
+
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            if (reader != null)
+            {
+                try
+                {
+                    reader.close();
+                } catch (IOException e)
+                {
+                    //log the exception
+                }
+            }
+        }
     }
 
     public void deleteAllNotes(View view)
