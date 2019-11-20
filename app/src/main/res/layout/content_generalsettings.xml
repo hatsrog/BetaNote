@@ -19,16 +19,28 @@
             android:layout_height="match_parent"
             android:layout_marginTop="30dp">
 
-            <Button
-                android:id="@+id/buttonDeleteAll"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:text="Supprimer toutes les notes"
-                android:onClick="deleteAllNotes"/>
-        </ScrollView>
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/buttonDeleteAll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Supprimer toutes les notes"
+                    android:onClick="deleteAllNotes"/>
 
+                <Switch
+                    android:id="@+id/switchExpertMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Mode expert" />
+
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

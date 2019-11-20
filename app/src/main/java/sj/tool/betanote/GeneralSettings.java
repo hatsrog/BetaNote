@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -22,12 +24,24 @@ import core.DataAnalyzer;
 import core.FileFinder;
 import core.Settings;
 import helper.GenericConstants;
+import helper.SettingsConstants;
 
-public class GeneralSettings extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class GeneralSettings extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
+{
+    Settings settings = null;
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+    }
+
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.generalsettings);
+
+        Switch switchExpertMode = findViewById(R.id.switchExpertMode);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -39,8 +53,8 @@ public class GeneralSettings extends AppCompatActivity implements NavigationView
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
+        //! Déplacer le fichier de config hors des assets, comme pour les notes
         BufferedReader reader = null;
-        Settings settings;
         try
         {
             reader = new BufferedReader(
@@ -66,6 +80,34 @@ public class GeneralSettings extends AppCompatActivity implements NavigationView
                 }
             }
         }
+        if(settings != null && settings.nodeExists(SettingsConstants.EXPERTMODE))
+        {
+            if(settings.getNode(SettingsConstants.EXPERTMODE).equals(String.valueOf(0)))
+            {
+                switchExpertMode.setChecked(false);
+            }
+            else if(settings.getNode(SettingsConstants.EXPERTMODE).equals(String.valueOf(1)))
+            {
+                switchExpertMode.setChecked(true);
+            }
+        }
+        switchExpertMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                if(settings != null && settings.nodeExists(SettingsConstants.EXPERTMODE))
+                {
+                    if(isChecked)
+                    {
+                        settings.setNode(SettingsConstants.EXPERTMODE, 1);
+                    }
+                    else
+                    {
+                        settings.setNode(SettingsConstants.EXPERTMODE, 0);
+                    }
+                }
+            }
+        });
     }
 
     public void deleteAllNotes(View view)
