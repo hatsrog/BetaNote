@@ -1,6 +1,7 @@
 package sj.tool.betanote;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,21 +15,15 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 
-import core.DataAnalyzer;
 import core.FileFinder;
-import core.Settings;
 import helper.GenericConstants;
-import helper.SettingsConstants;
 
 public class GeneralSettings extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
-    Settings settings = null;
+    SharedPreferences prefs = null;
 
     @Override
     public void onBackPressed()
@@ -41,6 +36,7 @@ public class GeneralSettings extends AppCompatActivity implements NavigationView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.generalsettings);
 
+        prefs = getSharedPreferences(GenericConstants.PACKAGE_NAME, MODE_PRIVATE);
         Switch switchExpertMode = findViewById(R.id.switchExpertMode);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -53,58 +49,26 @@ public class GeneralSettings extends AppCompatActivity implements NavigationView
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        //! Déplacer le fichier de config hors des assets, comme pour les notes
-        BufferedReader reader = null;
-        try
+        if (prefs.getBoolean("expertMode", true))
         {
-            reader = new BufferedReader(
-                    new InputStreamReader(getAssets().open(GenericConstants.GENERAL_SETTINGS_FILE)));
+            switchExpertMode.setChecked(true);
+        }
+        else
+        {
+            switchExpertMode.setChecked(false);
+        }
 
-            settings = DataAnalyzer.extractSettings(reader);
-
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            if (reader != null)
-            {
-                try
-                {
-                    reader.close();
-                } catch (IOException e)
-                {
-                    //log the exception
-                }
-            }
-        }
-        if(settings != null && settings.nodeExists(SettingsConstants.EXPERTMODE))
-        {
-            if(settings.getNode(SettingsConstants.EXPERTMODE).equals(String.valueOf(0)))
-            {
-                switchExpertMode.setChecked(false);
-            }
-            else if(settings.getNode(SettingsConstants.EXPERTMODE).equals(String.valueOf(1)))
-            {
-                switchExpertMode.setChecked(true);
-            }
-        }
         switchExpertMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
-                if(settings != null && settings.nodeExists(SettingsConstants.EXPERTMODE))
+                if(isChecked)
                 {
-                    if(isChecked)
-                    {
-                        settings.setNode(SettingsConstants.EXPERTMODE, 1);
-                    }
-                    else
-                    {
-                        settings.setNode(SettingsConstants.EXPERTMODE, 0);
-                    }
+                    prefs.edit().putBoolean("expertMode", true).apply();
+                }
+                else
+                {
+                    prefs.edit().putBoolean("expertMode", false).apply();
                 }
             }
         });
