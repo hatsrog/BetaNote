@@ -21,8 +21,6 @@ public class Settings {
         this.settingsMap = new HashMap<>();
     }
 
-    public Map<String, String> getSettingsMap() { return this.settingsMap; }
-
     private void convertToMap(String strSettings)
     {
         if(settingsMap == null)
@@ -64,10 +62,7 @@ public class Settings {
 
     public void setNode(String key, Object value)
     {
-        if(settingsMap.containsKey(key))
-        {
-            settingsMap.remove(key);
-        }
+        settingsMap.remove(key);
         settingsMap.put(key, value.toString());
     }
 

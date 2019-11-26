@@ -239,6 +239,7 @@ public class MainActivity extends AppCompatActivity
                                         {
                                             linearLayoutLatest = new LinearLayout(MainActivity.this);
                                             linearLayoutLatest.setOrientation(LinearLayout.VERTICAL);
+                                            int count = 0;
                                             for(final Map<String, String> note : allNotes)
                                             {
                                                 Settings settings = new Settings(note.get("settings"));
@@ -246,7 +247,15 @@ public class MainActivity extends AppCompatActivity
                                                 if((settings.nodeExists(SettingsConstants.TITLE) && containsIgnoreCase(settings.getNode("title"), editTextSearch.getText().toString())) || containsIgnoreCase(bodyText, editTextSearch.getText().toString()))
                                                 {
                                                     printNote(note);
+                                                    count++;
                                                 }
+                                            }
+                                            if(count == 0)
+                                            {
+                                                TextView txtNoNoteFound = new TextView(MainActivity.this);
+                                                txtNoNoteFound.setTextSize(30);
+                                                txtNoNoteFound.setText("Aucune note trouvée pour "+editTextSearch.getText());
+                                                linearLayoutLatest.addView(txtNoNoteFound);
                                             }
                                             scrollViewLatest.addView(linearLayoutLatest);
                                         }
