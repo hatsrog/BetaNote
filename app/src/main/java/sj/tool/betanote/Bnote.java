@@ -3,7 +3,9 @@ package sj.tool.betanote;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,9 +19,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import core.DataAnalyzer;
@@ -37,7 +42,9 @@ public class Bnote extends AppCompatActivity {
     Settings settings = null;
     String newFile = "";
     String filename = "";
+    String password = "";
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBackPressed()
     {
@@ -188,9 +195,10 @@ public class Bnote extends AppCompatActivity {
                 builder.setView(input);
 
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String password = input.getText().toString().trim();
+                        password = input.getText().toString().trim();
                         if(!password.equals(""))
                         {
                             try
@@ -258,10 +266,38 @@ public class Bnote extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void saveNote() {
         if(editTextBnote != null)
         {
             try {
+                String txtBNote = editTextBnote.getText().toString();
+                if(settings != null && settings.getNode(SettingsConstants.ENCRYPT).equals("1"))
+                {
+                    String txtToEncrypt = editTextBnote.getText().toString();
+                    if(settings.nodeExists(SettingsConstants.ENCRYPTSALT) && !password.equals(""))
+                    {
+                        String concat = settings.getNode(SettingsConstants.ENCRYPTSALT) + password;
+                        byte[] keyStart = concat.getBytes();
+                        KeyGenerator kgen = KeyGenerator.getInstance("AES");
+                        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+                        sr.setSeed(keyStart);
+                        kgen.init(256, sr); // 192 and 256 bits may not be available
+                        SecretKey skey = kgen.generateKey();
+                        byte[] key = skey.getEncoded();
+
+                        byte[] bytes = txtToEncrypt.getBytes("UTF-8");
+                        byte[] encryptedData = encrypt(key,bytes);
+                        txtBNote = java.util.Base64.getEncoder().encodeToString(encryptedData);
+
+                        //! Decaler cette partie decodage à l'ouverture de la BNote
+                        byte[] decoded = java.util.Base64.getDecoder().decode(txtBNote);
+                        byte[] decryptedData = decrypt(key,decoded);
+                        String txtDecrypted = new String(decryptedData, "UTF-8");
+                        System.out.println(txtDecrypted);
+                    }
+                }
+
                 if(newFile.equals("true")) {
 
                     if(settings != null)
@@ -279,7 +315,7 @@ public class Bnote extends AppCompatActivity {
                             String createdSettings = settings.getSettingsAsString();
                             FileWriter writer = new FileWriter(init);
                             writer.append(createdSettings);
-                            writer.append(editTextBnote.getText());
+                            writer.append(txtBNote);
                             writer.flush();
                             writer.close();
                         }
@@ -298,16 +334,19 @@ public class Bnote extends AppCompatActivity {
                     }
                     if(editTextBnote != null)
                     {
-                        String storeText = editTextBnote.getText().toString();
                         FileWriter writer = new FileWriter(init);
                         writer.write("");
                         writer.append(settings.getSettingsAsString());
-                        writer.append(storeText);
+                        writer.append(txtBNote);
                         writer.flush();
                         writer.close();
                     }
                 }
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -327,11 +366,12 @@ public class Bnote extends AppCompatActivity {
         return cipher.doFinal(encrypted);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static String getSalt() throws Exception {
 
-        SecureRandom sr = SecureRandom.getInstance("PBKDF2WithHmacSHA1");
+        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
         byte[] salt = new byte[20];
         sr.nextBytes(salt);
-        return new String(salt);
+        return java.util.Base64.getEncoder().encodeToString(salt);
     }
 }
