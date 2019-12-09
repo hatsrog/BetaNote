@@ -12,19 +12,24 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import core.DataAnalyzer;
@@ -71,35 +76,78 @@ public class Bnote extends AppCompatActivity {
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+filename));
                 settings = new Settings(DataAnalyzer.extractSettingsAsString(br));
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+filename));
-                String bodyText = DataAnalyzer.extractBodyText(br);
+                final String bodyText = DataAnalyzer.extractBodyTextRaw(br);
 
                 if(settings.getNode(SettingsConstants.ENCRYPT) != null && settings.getNode(SettingsConstants.ENCRYPT).equals("1"))
                 {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Mot de passe");
-
                     final EditText input = new EditText(this);
                     input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    builder.setView(input);
 
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    final AlertDialog builder = new AlertDialog.Builder(this)
+                        .setTitle("Mot de passe")
+                        .setPositiveButton("Ok", null)
+                        .setNegativeButton("Annuler", null)
+                        .setView(input)
+                        .show();
+
+                    Button dialogPositive = builder.getButton(AlertDialog.BUTTON_POSITIVE);
+                    Button dialogNegative = builder.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+                    dialogPositive.setOnClickListener(new View.OnClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.O)
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(View v) {
                             String password = input.getText().toString().trim();
                             if(!password.equals(""))
                             {
-                                //! Decryptez le texte avec la clé entrée
+                                try
+                                {
+                                    PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), settings.getNode(SettingsConstants.ENCRYPTSALT).getBytes(), 1000, 256);
+                                    SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+                                    byte[] hash = skf.generateSecret(spec).getEncoded();
+
+                                    byte[] decoded = Base64.getDecoder().decode(bodyText);
+                                    byte[] decryptedData = decrypt(hash,decoded);
+                                    String txtDecrypted = new String(decryptedData, "UTF-8");
+                                    if(!txtDecrypted.equals(""))
+                                    {
+                                        editTextBnote.setText(txtDecrypted);
+                                        builder.dismiss();
+                                    }
+                                }
+                                catch (NoSuchAlgorithmException e)
+                                {
+                                    e.printStackTrace();
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
+                                catch (Exception e)
+                                {
+                                    // En cas de mauvais mot de passe
+                                    Toast.makeText(Bnote.this, "Mauvais mot de passe", Toast.LENGTH_LONG).show();
+                                    input.setText("");
+                                }
                             }
                         }
                     });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                    dialogNegative.setOnClickListener(new View.OnClickListener()
+                    {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
+                        public void onClick(View v)
+                        {
+                            Intent intent = new Intent(Bnote.this, MainActivity.class);
+                            startActivity(intent);
                         }
                     });
 
-                    builder.show();
+                    builder.setOnCancelListener(new AlertDialog.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            Intent intent = new Intent(Bnote.this, MainActivity.class);
+                            startActivity(intent);
+                        }
+                    });
                 }
                 else if(bodyText != null)
                 {
@@ -277,24 +325,13 @@ public class Bnote extends AppCompatActivity {
                     String txtToEncrypt = editTextBnote.getText().toString();
                     if(settings.nodeExists(SettingsConstants.ENCRYPTSALT) && !password.equals(""))
                     {
-                        String concat = settings.getNode(SettingsConstants.ENCRYPTSALT) + password;
-                        byte[] keyStart = concat.getBytes();
-                        KeyGenerator kgen = KeyGenerator.getInstance("AES");
-                        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-                        sr.setSeed(keyStart);
-                        kgen.init(256, sr); // 192 and 256 bits may not be available
-                        SecretKey skey = kgen.generateKey();
-                        byte[] key = skey.getEncoded();
+                        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), settings.getNode(SettingsConstants.ENCRYPTSALT).getBytes(), 1000, 256);
+                        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+                        byte[] key = skf.generateSecret(spec).getEncoded();
 
                         byte[] bytes = txtToEncrypt.getBytes("UTF-8");
                         byte[] encryptedData = encrypt(key,bytes);
                         txtBNote = java.util.Base64.getEncoder().encodeToString(encryptedData);
-
-                        //! Decaler cette partie decodage à l'ouverture de la BNote
-                        byte[] decoded = java.util.Base64.getDecoder().decode(txtBNote);
-                        byte[] decryptedData = decrypt(key,decoded);
-                        String txtDecrypted = new String(decryptedData, "UTF-8");
-                        System.out.println(txtDecrypted);
                     }
                 }
 
