@@ -97,12 +97,12 @@ public class Bnote extends AppCompatActivity {
                         @RequiresApi(api = Build.VERSION_CODES.O)
                         @Override
                         public void onClick(View v) {
-                            String password = input.getText().toString().trim();
-                            if(!password.equals(""))
+                            String localPassword = input.getText().toString().trim();
+                            if(!localPassword.equals(""))
                             {
                                 try
                                 {
-                                    PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), settings.getNode(SettingsConstants.ENCRYPTSALT).getBytes(), 1000, 256);
+                                    PBEKeySpec spec = new PBEKeySpec(localPassword.toCharArray(), settings.getNode(SettingsConstants.ENCRYPTSALT).getBytes(), 1000, 256);
                                     SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
                                     byte[] hash = skf.generateSecret(spec).getEncoded();
 
@@ -112,6 +112,7 @@ public class Bnote extends AppCompatActivity {
                                     if(!txtDecrypted.equals(""))
                                     {
                                         editTextBnote.setText(txtDecrypted);
+                                        password = localPassword;
                                         builder.dismiss();
                                     }
                                 }
@@ -258,6 +259,7 @@ public class Bnote extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                             settings.setNode(SettingsConstants.ENCRYPT, "1");
+                            Toast.makeText(Bnote.this, "Cryptage activé", Toast.LENGTH_LONG).show();
                             dialog.cancel();
                         }
                     }
@@ -273,8 +275,8 @@ public class Bnote extends AppCompatActivity {
             }
             else if(encryptNode.equals("1"))
             {
-                //! Stocker le texte en clair, passer encryotNode à 0
-                //settings.setNode(SettingsConstants.ENCRYPT, "1");
+                settings.setNode(SettingsConstants.ENCRYPT, "0");
+                Toast.makeText(Bnote.this, "Cryptage désactivé", Toast.LENGTH_LONG).show();
             }
         }
         else if(id == R.id.action_backgroundcolor)
