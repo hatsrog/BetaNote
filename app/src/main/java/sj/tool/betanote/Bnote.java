@@ -76,7 +76,7 @@ public class Bnote extends AppCompatActivity {
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+filename));
                 settings = new Settings(DataAnalyzer.extractSettingsAsString(br));
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+filename));
-                final String bodyText = DataAnalyzer.extractBodyTextRaw(br);
+                final String bodyText = DataAnalyzer.extractBodyText(br);
 
                 if(settings.getNode(SettingsConstants.ENCRYPT) != null && settings.getNode(SettingsConstants.ENCRYPT).equals("1"))
                 {

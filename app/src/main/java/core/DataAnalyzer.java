@@ -13,25 +13,6 @@ public final class DataAnalyzer {
         {
             if(endOfSettings)
             {
-                bodyText += line + "\n";
-            }
-            if(line.trim().equals(">>"))
-            {
-                endOfSettings = true;
-                continue;
-            }
-        }
-        return bodyText;
-    }
-
-    public static String extractBodyTextRaw(BufferedReader br) throws IOException {
-        String line;
-        Boolean endOfSettings = false;
-        String bodyText = "";
-        while ((line = br.readLine()) != null)
-        {
-            if(endOfSettings)
-            {
                 bodyText += line;
             }
             if(line.trim().equals(">>"))

@@ -22,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name="sj.tool.betanote.Bnote"
+                  android:configChanges="keyboardHidden|orientation|screenSize"
                   android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name="sj.tool.betanote.About"
