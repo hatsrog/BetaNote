@@ -17,9 +17,4 @@
         android:orderInCategory="100"
         android:title="Couleur du fond"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_fontcolor"
-        android:orderInCategory="100"
-        android:title="Couleur du texte"
-        app:showAsAction="never" />
 </menu>

@@ -58,7 +58,14 @@ public class MainActivity extends AppCompatActivity
         String bodyText = Mapnote.get("body");
         final LinearLayout linearLayoutNote = new LinearLayout(MainActivity.this);
         linearLayoutNote.setOrientation(LinearLayout.VERTICAL);
-        linearLayoutNote.setBackgroundColor(Color.rgb(254,238,234));
+        if(settings.nodeExists(SettingsConstants.BACKGROUNDCOLOR))
+        {
+            linearLayoutNote.setBackgroundColor(Integer.valueOf(settings.getNode(SettingsConstants.BACKGROUNDCOLOR)));
+        }
+        else
+        {
+            linearLayoutNote.setBackgroundColor(Color.rgb(254, 238, 234));
+        }
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(50, 50, 50, 0);

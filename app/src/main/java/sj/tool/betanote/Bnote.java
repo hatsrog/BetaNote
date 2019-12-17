@@ -152,31 +152,19 @@ public class Bnote extends AppCompatActivity {
                 }
                 else if(bodyText != null)
                 {
-                    if(settings.nodeExists(SettingsConstants.FONTCOLOR))
-                    {
-                        try
-                        {
-                            int fontcolor = Integer.parseInt(settings.getNode(SettingsConstants.FONTCOLOR));
-                            editTextBnote.setTextColor(fontcolor);
-                        }
-                        catch(NumberFormatException ex)
-                        {
-                            System.out.println(ex.getMessage());
-                        }
-                    }
-                    if(settings.nodeExists(SettingsConstants.BACKGROUNDCOLOR))
-                    {
-                        try
-                        {
-                            int backgroundcolor = Integer.parseInt(settings.getNode(SettingsConstants.BACKGROUNDCOLOR));
-                            editTextBnote.setBackgroundColor(backgroundcolor);
-                        }
-                        catch(NumberFormatException ex)
-                        {
-                            System.out.println(ex.getMessage());
-                        }
-                    }
                     editTextBnote.setText(bodyText);
+                }
+                if(settings.nodeExists(SettingsConstants.BACKGROUNDCOLOR))
+                {
+                    try
+                    {
+                        int backgroundcolor = Integer.parseInt(settings.getNode(SettingsConstants.BACKGROUNDCOLOR));
+                        editTextBnote.setBackgroundColor(backgroundcolor);
+                    }
+                    catch(NumberFormatException ex)
+                    {
+                        System.out.println(ex.getMessage());
+                    }
                 }
             }
             catch (IOException e) {
@@ -286,23 +274,6 @@ public class Bnote extends AppCompatActivity {
                 public void onOk(AmbilWarnaDialog dialog, int color) {
                     editTextBnote.setBackgroundColor(color);
                     settings.setNode(SettingsConstants.BACKGROUNDCOLOR, color);
-                }
-
-                @Override
-                public void onCancel(AmbilWarnaDialog dialog) {
-                    // cancel was selected by the user
-                }
-
-            });
-            dialog.show();
-        }
-        else if(id == R.id.action_fontcolor)
-        {
-            AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, Color.BLACK, new AmbilWarnaDialog.OnAmbilWarnaListener() {
-                @Override
-                public void onOk(AmbilWarnaDialog dialog, int color) {
-                    editTextBnote.setTextColor(color);
-                    settings.setNode(SettingsConstants.FONTCOLOR, color);
                 }
 
                 @Override

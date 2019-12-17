@@ -57,7 +57,6 @@ public class Settings {
         settingsMap.put(SettingsConstants.ENCRYPT, "0");
         settingsMap.put(SettingsConstants.ENCRYPTSALT, "");
         settingsMap.put(SettingsConstants.BACKGROUNDCOLOR, "");
-        settingsMap.put(SettingsConstants.FONTCOLOR, "");
     }
 
     public void setNode(String key, Object value)
