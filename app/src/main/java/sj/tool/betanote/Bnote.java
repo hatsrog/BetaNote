@@ -38,7 +38,7 @@ import helper.GenericConstants;
 import helper.SettingsConstants;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
-import static helper.DateTime.getDateTime;
+import static helper.DateTime.getUnixTime;
 
 public class Bnote extends AppCompatActivity {
 
@@ -76,10 +76,10 @@ public class Bnote extends AppCompatActivity {
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+filename));
                 settings = new Settings(DataAnalyzer.extractSettingsAsString(br));
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+filename));
-                final String bodyText = DataAnalyzer.extractBodyText(br);
 
                 if(settings.getNode(SettingsConstants.ENCRYPT) != null && settings.getNode(SettingsConstants.ENCRYPT).equals("1"))
                 {
+                    final String bodyText = DataAnalyzer.extractBodyText(br, true);
                     final EditText input = new EditText(this);
                     input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
@@ -150,8 +150,9 @@ public class Bnote extends AppCompatActivity {
                         }
                     });
                 }
-                else if(bodyText != null)
+                else
                 {
+                    final String bodyText = DataAnalyzer.extractBodyText(br, false);
                     editTextBnote.setText(bodyText);
                 }
                 if(settings.nodeExists(SettingsConstants.BACKGROUNDCOLOR))
@@ -319,7 +320,7 @@ public class Bnote extends AppCompatActivity {
                         if(editTextBnote.getText().toString().trim().length() > 0)
                         {
                             new File(getFilesDir().toString(), GenericConstants.BETANOTES_DIRECTORY);
-                            String filename = getDateTime("yyyyMMddHHmmss")+".txt";
+                            String filename = getUnixTime()+".txt";
                             File init = new File(getFilesDir().toString()+"/"+GenericConstants.BETANOTES_DIRECTORY, filename);
                             init.createNewFile();
                             String createdSettings = settings.getSettingsAsString();
@@ -336,7 +337,7 @@ public class Bnote extends AppCompatActivity {
                     File init = new File(getFilesDir().toString()+"/"+GenericConstants.BETANOTES_DIRECTORY, filename);
                     if(settings != null)
                     {
-                        settings.setNode(SettingsConstants.LASTMODIFICATION, getDateTime());
+                        settings.setNode(SettingsConstants.LASTMODIFICATION, getUnixTime());
                     }
                     if(editTextTitle != null)
                     {

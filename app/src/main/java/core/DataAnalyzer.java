@@ -5,15 +5,22 @@ import java.io.IOException;
 
 public final class DataAnalyzer {
 
-    public static String extractBodyText(BufferedReader br) throws IOException {
+    public static String extractBodyText(BufferedReader br, Boolean raw) throws IOException {
         String line;
         Boolean endOfSettings = false;
-        String bodyText = "";
+        StringBuilder bodyText = new StringBuilder();
         while ((line = br.readLine()) != null)
         {
             if(endOfSettings)
             {
-                bodyText += line;
+                if(raw)
+                {
+                    bodyText.append(line);
+                }
+                else
+                {
+                    bodyText.append(line).append("\n");
+                }
             }
             if(line.trim().equals(">>"))
             {
@@ -21,7 +28,7 @@ public final class DataAnalyzer {
                 continue;
             }
         }
-        return bodyText;
+        return bodyText.toString();
     }
 
     public static String extractBodyText(BufferedReader br, int limiter) throws IOException {

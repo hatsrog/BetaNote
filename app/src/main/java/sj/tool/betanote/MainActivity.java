@@ -41,6 +41,8 @@ import core.Settings;
 import helper.GenericConstants;
 import helper.SettingsConstants;
 
+import static helper.DateTime.getDateTime;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -84,7 +86,8 @@ public class MainActivity extends AppCompatActivity
         if(settings.nodeExists(SettingsConstants.LASTMODIFICATION))
         {
             TextView txtViewLastModification = new TextView(MainActivity.this);
-            txtViewLastModification.setText(settings.getNode(SettingsConstants.LASTMODIFICATION));
+            long unixTime = Long.parseLong(settings.getNode(SettingsConstants.LASTMODIFICATION));
+            txtViewLastModification.setText(getDateTime(unixTime));
             txtViewLastModification.setTextSize(15);
             linearLayoutNote.addView(txtViewLastModification);
         }

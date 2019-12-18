@@ -2,19 +2,19 @@ package helper;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public class DateTime
 {
-    public static String getDateTime()
+    public static String getUnixTime()
     {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
-        return sdf.format(new Date());
+        return String.valueOf(System.currentTimeMillis() / 1000L);
     }
 
-    public static String getDateTime(String pattern)
+    public static String getDateTime(long unixTime)
     {
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.getDefault());
-        return sdf.format(new Date());
+        Date date = new java.util.Date(unixTime*1000L);
+        SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT+1"));
+        return sdf.format(date);
     }
 }

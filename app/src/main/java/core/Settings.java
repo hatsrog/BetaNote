@@ -5,7 +5,7 @@ import java.util.Map;
 
 import helper.SettingsConstants;
 
-import static helper.DateTime.getDateTime;
+import static helper.DateTime.getUnixTime;
 
 public class Settings {
 
@@ -52,8 +52,8 @@ public class Settings {
     public void createSettingsNodes()
     {
         settingsMap.put(SettingsConstants.TITLE, "");
-        settingsMap.put(SettingsConstants.CREATIONDATE, getDateTime());
-        settingsMap.put(SettingsConstants.LASTMODIFICATION, getDateTime());
+        settingsMap.put(SettingsConstants.CREATIONDATE, getUnixTime());
+        settingsMap.put(SettingsConstants.LASTMODIFICATION, getUnixTime());
         settingsMap.put(SettingsConstants.ENCRYPT, "0");
         settingsMap.put(SettingsConstants.ENCRYPTSALT, "");
         settingsMap.put(SettingsConstants.BACKGROUNDCOLOR, "");
