@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -63,6 +64,7 @@ public class Bnote extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bnote);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        ImageButton buttonReturn = findViewById(R.id.imageButtonSave);
         BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
         bottomNavigationView.getMenu().findItem(bottomNavigationView.getSelectedItemId());
         setSupportActionBar(toolbar);
@@ -72,6 +74,16 @@ public class Bnote extends AppCompatActivity {
         editTextTitle = findViewById(R.id.editTextTitle);
         filename = intent.getStringExtra("filename");
         newFile = intent.getStringExtra("newFile");
+
+        buttonReturn.setOnClickListener(new View.OnClickListener()
+        {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v)
+            {
+                onBackPressed();
+            }
+        });
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {

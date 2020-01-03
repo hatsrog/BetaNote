@@ -19,6 +19,14 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
+            <ImageButton
+                android:id="@+id/imageButtonSave"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:scaleType="fitCenter"
+                android:background="@color/colorPrimary"
+                android:src="@drawable/leftarrow" />
+
             <EditText
                 android:id="@+id/editTextTitle"
                 android:layout_width="match_parent"
