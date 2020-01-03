@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,13 +26,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.Base64;
 
-import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import core.DataAnalyzer;
 import core.Settings;
@@ -38,6 +37,9 @@ import helper.GenericConstants;
 import helper.SettingsConstants;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
+import static core.Crypto.decrypt;
+import static core.Crypto.encrypt;
+import static core.Crypto.getSalt;
 import static helper.DateTime.getUnixTime;
 
 public class Bnote extends AppCompatActivity {
@@ -61,6 +63,8 @@ public class Bnote extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bnote);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
+        bottomNavigationView.getMenu().findItem(bottomNavigationView.getSelectedItemId());
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
 
@@ -68,6 +72,25 @@ public class Bnote extends AppCompatActivity {
         editTextTitle = findViewById(R.id.editTextTitle);
         filename = intent.getStringExtra("filename");
         newFile = intent.getStringExtra("newFile");
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.action_bold:
+                                Toast.makeText(Bnote.this, "Bold", Toast.LENGTH_LONG).show();
+                                break;
+                            case R.id.action_italic:
+                                Toast.makeText(Bnote.this, "Italic", Toast.LENGTH_LONG).show();
+                                break;
+                            case R.id.action_underline:
+                                Toast.makeText(Bnote.this, "Underline", Toast.LENGTH_LONG).show();
+                                break;
+                        }
+                        return false;
+                    }
+                });
 
         if (filename != null) {
             editTextBnote.setText(null);
@@ -361,28 +384,5 @@ public class Bnote extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-    }
-
-    private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception {
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
-        return cipher.doFinal(clear);
-    }
-
-    private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-        return cipher.doFinal(encrypted);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public static String getSalt() throws Exception {
-
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-        byte[] salt = new byte[20];
-        sr.nextBytes(salt);
-        return java.util.Base64.getEncoder().encodeToString(salt);
     }
 }
