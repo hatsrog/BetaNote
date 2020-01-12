@@ -26,6 +26,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
@@ -143,7 +144,7 @@ public class Bnote extends AppCompatActivity {
 
                                     byte[] decoded = Base64.getDecoder().decode(bodyText);
                                     byte[] decryptedData = decrypt(hash,decoded);
-                                    String txtDecrypted = new String(decryptedData, "UTF-8");
+                                    String txtDecrypted = new String(decryptedData, StandardCharsets.UTF_8);
                                     if(!txtDecrypted.equals(""))
                                     {
                                         editTextBnote.setText(txtDecrypted);
@@ -210,7 +211,10 @@ public class Bnote extends AppCompatActivity {
             {
                 try
                 {
-                    br.close();
+                    if (br != null)
+                    {
+                        br.close();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -338,7 +342,7 @@ public class Bnote extends AppCompatActivity {
                         SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
                         byte[] key = skf.generateSecret(spec).getEncoded();
 
-                        byte[] bytes = txtToEncrypt.getBytes("UTF-8");
+                        byte[] bytes = txtToEncrypt.getBytes(StandardCharsets.UTF_8);
                         byte[] encryptedData = encrypt(key,bytes);
                         txtBNote = java.util.Base64.getEncoder().encodeToString(encryptedData);
                     }
@@ -376,7 +380,10 @@ public class Bnote extends AppCompatActivity {
                     }
                     if(editTextTitle != null)
                     {
-                        settings.setNode(SettingsConstants.TITLE, editTextTitle.getText().toString());
+                        if (settings != null)
+                        {
+                            settings.setNode(SettingsConstants.TITLE, editTextTitle.getText().toString());
+                        }
                     }
                     if(editTextBnote != null)
                     {

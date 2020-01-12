@@ -41,12 +41,12 @@ public class Settings {
 
     public String getSettingsAsString()
     {
-        String settingsAsString = "<<\n";
+        StringBuilder settingsAsString = new StringBuilder("<<\n");
         for (Map.Entry<String, String> entry : settingsMap.entrySet()) {
-            settingsAsString += entry.getKey() + ":" + entry.getValue() + "\n";
+            settingsAsString.append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
         }
-        settingsAsString += ">>\n";
-        return settingsAsString;
+        settingsAsString.append(">>\n");
+        return settingsAsString.toString();
     }
 
     public void createSettingsNodes()

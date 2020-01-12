@@ -7,7 +7,7 @@ public final class DataAnalyzer {
 
     public static String extractBodyText(BufferedReader br, Boolean raw) throws IOException {
         String line;
-        Boolean endOfSettings = false;
+        boolean endOfSettings = false;
         StringBuilder bodyText = new StringBuilder();
         while ((line = br.readLine()) != null)
         {
@@ -33,13 +33,13 @@ public final class DataAnalyzer {
 
     public static String extractBodyText(BufferedReader br, int limiter) throws IOException {
         String line;
-        Boolean endOfSettings = false;
-        String bodyText = "";
+        boolean endOfSettings = false;
+        StringBuilder bodyText = new StringBuilder();
         while ((line = br.readLine()) != null)
         {
             if(endOfSettings)
             {
-                bodyText += line + "\n";
+                bodyText.append(line).append("\n");
             }
             if(line.trim().equals(">>"))
             {
@@ -51,13 +51,13 @@ public final class DataAnalyzer {
                 return bodyText.substring(0, limiter);
             }
         }
-        return bodyText;
+        return bodyText.toString();
     }
 
     public static String extractSettingsAsString(BufferedReader br) throws IOException {
         String line;
         Boolean endOfSettings = null;
-        String strSettings = "";
+        StringBuilder strSettings = new StringBuilder();
         while ((line = br.readLine()) != null)
         {
             if(line.trim().equals("<<"))
@@ -70,10 +70,10 @@ public final class DataAnalyzer {
             }
             if(!endOfSettings)
             {
-                strSettings += line +"\n";
+                strSettings.append(line).append("\n");
             }
         }
-        return strSettings;
+        return strSettings.toString();
     }
 
     public static Settings extractSettings(BufferedReader br) throws IOException {

@@ -3,6 +3,7 @@ package sj.tool.betanote;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -93,7 +94,7 @@ public class GeneralSettings extends AppCompatActivity implements NavigationView
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem)
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
     {
         int id = menuItem.getItemId();
 
