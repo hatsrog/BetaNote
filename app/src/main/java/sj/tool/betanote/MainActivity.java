@@ -80,7 +80,18 @@ public class MainActivity extends AppCompatActivity
             linearLayoutNote.addView(txtViewTitle);
         }
         TextView txtViewBody = new TextView(MainActivity.this);
-        txtViewBody.setText(bodyText);
+        if(settings.nodeExists(SettingsConstants.ENCRYPT))
+        {
+            if(settings.getNode(SettingsConstants.ENCRYPT).equals("1"))
+            {
+                //! Afficher un cadenas à la place ou un truc du genre
+                txtViewBody.setText("Encrypted");
+            }
+            else
+            {
+                txtViewBody.setText(bodyText);
+            }
+        }
         txtViewBody.setTextSize(20);
         linearLayoutNote.addView(txtViewBody);
         if(settings.nodeExists(SettingsConstants.LASTMODIFICATION))
