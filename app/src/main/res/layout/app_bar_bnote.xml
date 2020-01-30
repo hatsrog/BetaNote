@@ -38,14 +38,4 @@
 
     <include layout="@layout/content_bnote"/>
 
-
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/activity_main_bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/colorPrimary"
-        app:menu="@menu/menu_bottom_bnote"
-        android:layout_alignParentBottom="true" />
-
 </android.support.design.widget.CoordinatorLayout>

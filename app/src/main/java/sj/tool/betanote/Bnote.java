@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -66,8 +64,6 @@ public class Bnote extends AppCompatActivity {
         setContentView(R.layout.bnote);
         Toolbar toolbar = findViewById(R.id.toolbar);
         ImageButton buttonReturn = findViewById(R.id.imageButtonSave);
-        BottomNavigationView bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation);
-        bottomNavigationView.getMenu().findItem(bottomNavigationView.getSelectedItemId());
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
 
@@ -85,25 +81,6 @@ public class Bnote extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_bold:
-                                Toast.makeText(Bnote.this, "Bold", Toast.LENGTH_LONG).show();
-                                break;
-                            case R.id.action_italic:
-                                Toast.makeText(Bnote.this, "Italic", Toast.LENGTH_LONG).show();
-                                break;
-                            case R.id.action_underline:
-                                Toast.makeText(Bnote.this, "Underline", Toast.LENGTH_LONG).show();
-                                break;
-                        }
-                        return false;
-                    }
-                });
 
         if (filename != null) {
             editTextBnote.setText(null);
