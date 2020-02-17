@@ -25,7 +25,7 @@ Cependant, il est possible de compiler les sources et d'installer l'application 
 
 ### Contributions
 
-Les contributions externes sont les bienvenues, pour toute idée, remarque ou proposition de code, merci de me contacter à [contact@jourdan.info](contact@jourdan.info)
+Les contributions externes sont les bienvenues, pour toute idée, remarque ou proposition de code, merci de me contacter à [sebastien@jourdan.info](sebastien@jourdan.info)
 
 Le code source de ce projet est libre et le restera, cependant merci de respecter la licence GPLv3
 
@@ -52,6 +52,6 @@ However, it is possible to compile the sources and install the application on yo
 
 ### Contributions
 
-External contributions are welcome, for any idea, remark or code proposal, please contact me at [contact@jourdan.info] (contact@jourdan.info)
+External contributions are welcome, for any idea, remark or code proposal, please contact me at [sebastien@jourdan.info] (sebastien@jourdan.info)
 
 The source code of this project is free and will remain free, however please respect the GPLv3 license

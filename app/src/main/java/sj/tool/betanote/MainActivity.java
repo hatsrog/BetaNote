@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity
     {
         // Recherche des fichiers texte
         FileFinder fileFinder = new FileFinder();
-        List<String> latest = fileFinder.findLatestNotes(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY);
+        List<String> latest = fileFinder.sortByLatest(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY);
         linearLayoutLatest = new LinearLayout(this);
         linearLayoutLatest.setOrientation(LinearLayout.VERTICAL);
         allNotes.clear();

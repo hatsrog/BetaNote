@@ -78,7 +78,7 @@ public class GeneralSettings extends AppCompatActivity implements NavigationView
     public void deleteAllNotes(View view)
     {
         FileFinder fileFinder = new FileFinder();
-        List<String> allNotes = fileFinder.findLatestNotes(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY);
+        List<String> allNotes = fileFinder.getNotes(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY);
         if(allNotes.size() > 0)
         {
             for(String note : allNotes)
