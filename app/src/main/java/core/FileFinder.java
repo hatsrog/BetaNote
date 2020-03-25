@@ -39,7 +39,7 @@ public class FileFinder {
                     br = new BufferedReader(new FileReader(filePath + "/" + file));
                     Settings settings = DataAnalyzer.extractSettings(br);
                     if (settings.nodeExists(SettingsConstants.LASTMODIFICATION)) {
-                        if (Integer.parseInt(settings.getNode(SettingsConstants.LASTMODIFICATION)) > maxDateModification) {
+                        if (Integer.parseInt(settings.getNode(SettingsConstants.LASTMODIFICATION)) >= maxDateModification) {
                             maxDateModification = Integer.parseInt(settings.getNode(SettingsConstants.LASTMODIFICATION));
                             maxFileDateModification = file;
                         }
