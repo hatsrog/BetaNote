@@ -57,23 +57,30 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="0dp"
             android:background="?attr/colorPrimary"
+            android:onClick="clickUnderline"
             android:paddingTop="0dp"
             app:contentInsetStart="0dp"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <Button
+                android:id="@+id/btnBold"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
+                android:onClick="clickBold"
                 android:text="G" />
 
             <Button
+                android:id="@+id/btnItalic"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
+                android:onClick="clickItalic"
                 android:text="I" />
 
             <Button
+                android:id="@+id/btnUnderline"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
+                android:onClick="clickUnderline"
                 android:text="U" />
 
         </android.support.v7.widget.Toolbar>
