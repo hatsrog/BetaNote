@@ -8,4 +8,5 @@ public final class SettingsConstants
     public static final String ENCRYPT = "encrypt";
     public static final String ENCRYPTSALT = "encryptSalt";
     public static final String BACKGROUNDCOLOR = "backgroundcolor";
+    public static final String FILEVERSION = "fileVersion";
 }

@@ -35,6 +35,7 @@ import core.DataAnalyzer;
 import core.Settings;
 import helper.GenericConstants;
 import helper.SettingsConstants;
+import helper.TypoConstants;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 import static core.Crypto.decrypt;
@@ -47,6 +48,10 @@ public class Bnote extends AppCompatActivity {
     EditText editTextTitle = null;
     EditText editTextBnote = null;
     Settings settings = null;
+    Settings typo = null;
+    Button buttonBold = null;
+    Button buttonItalic = null;
+    Button buttonUnderline = null;
     String newFile = "";
     String filename = "";
     String password = "";
@@ -69,6 +74,12 @@ public class Bnote extends AppCompatActivity {
 
         editTextBnote = findViewById(R.id.editTextBnote);
         editTextTitle = findViewById(R.id.editTextTitle);
+        buttonBold = findViewById(R.id.btnBold);
+        buttonItalic = findViewById(R.id.btnItalic);
+        buttonUnderline = findViewById(R.id.btnUnderline);
+        typo = new Settings();
+        typo.createTypoNodes();
+
         filename = intent.getStringExtra("filename");
         newFile = intent.getStringExtra("newFile");
 
@@ -379,6 +390,48 @@ public class Bnote extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void clickBold(View view)
+    {
+        if(typo.isTrue(TypoConstants.BOLD))
+        {
+            typo.setNode(TypoConstants.BOLD, "0");
+            view.setBackgroundColor(Color.RED);
+        }
+        else if(typo.isFalse(TypoConstants.BOLD))
+        {
+            typo.setNode(TypoConstants.BOLD, "1");
+            view.setBackgroundColor(Color.GREEN);
+        }
+    }
+
+    public void clickItalic(View view)
+    {
+        if(typo.isTrue(TypoConstants.ITALIC))
+        {
+            typo.setNode(TypoConstants.ITALIC, "0");
+            view.setBackgroundColor(Color.RED);
+        }
+        else if(typo.isFalse(TypoConstants.ITALIC))
+        {
+            typo.setNode(TypoConstants.ITALIC, "1");
+            view.setBackgroundColor(Color.GREEN);
+        }
+    }
+
+    public void clickUnderline(View view)
+    {
+        if(typo.isTrue(TypoConstants.UNDERLINE))
+        {
+            typo.setNode(TypoConstants.UNDERLINE, "0");
+            view.setBackgroundColor(Color.RED);
+        }
+        else if(typo.isFalse(TypoConstants.UNDERLINE))
+        {
+            typo.setNode(TypoConstants.UNDERLINE, "1");
+            view.setBackgroundColor(Color.GREEN);
         }
     }
 }

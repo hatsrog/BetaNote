@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import helper.SettingsConstants;
+import helper.TypoConstants;
 
 import static helper.DateTime.getUnixTime;
 
@@ -57,6 +58,14 @@ public class Settings {
         settingsMap.put(SettingsConstants.ENCRYPT, "0");
         settingsMap.put(SettingsConstants.ENCRYPTSALT, "");
         settingsMap.put(SettingsConstants.BACKGROUNDCOLOR, "");
+        settingsMap.put(SettingsConstants.FILEVERSION, "0.1");
+    }
+
+    public void createTypoNodes()
+    {
+        settingsMap.put(TypoConstants.BOLD, "0");
+        settingsMap.put(TypoConstants.ITALIC, "0");
+        settingsMap.put(TypoConstants.UNDERLINE, "0");
     }
 
     public void setNode(String key, Object value)
@@ -86,5 +95,25 @@ public class Settings {
             exists = true;
         }
         return exists;
+    }
+
+    public boolean isTrue(String key)
+    {
+        boolean isTrue = false;
+        if(getNode(key).equals("1") || getNode(key).equals("true"))
+        {
+            isTrue = true;
+        }
+        return isTrue;
+    }
+
+    public boolean isFalse(String key)
+    {
+        boolean isFalse = false;
+        if(getNode(key).equals("0") || getNode(key).equals("false"))
+        {
+            isFalse = true;
+        }
+        return isFalse;
     }
 }
