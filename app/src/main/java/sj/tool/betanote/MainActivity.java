@@ -1,5 +1,6 @@
 package sj.tool.betanote;
 
+import android.app.Application;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -107,6 +108,7 @@ public class MainActivity extends AppCompatActivity
         {
             public void onClick(View v)
             {
+                finish();
                 Intent intent = new Intent(MainActivity.this, Bnote.class);
                 intent.putExtra("filename", Mapnote.get("filename"));
                 intent.putExtra("newFile", "false");
@@ -117,25 +119,36 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onLongClick(View v)
             {
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Suppression Note")
-                        .setMessage("Etes-vous sûr de vouloir supprimer cette note ?")
+                if(prefs.getBoolean("expertMode", true))
+                {
+                    removeNote(linearLayoutNote, Mapnote);
+                }
+                else
+                {
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Suppression Note")
+                            .setMessage("Etes-vous sûr de vouloir supprimer cette note ?")
 
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                linearLayoutLatest.removeView(linearLayoutNote);
-                                allNotes.remove(Mapnote);
-                                File fileToRemove = new File(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+Mapnote.get("filename"));
-                                fileToRemove.delete();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    removeNote(linearLayoutNote, Mapnote);
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, null)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
                 return true;
             }
         });
+    }
+
+    public void removeNote(LinearLayout linearLayout, Map<String, String> noteMap)
+    {
+        linearLayoutLatest.removeView(linearLayout);
+        allNotes.remove(noteMap);
+        File fileToRemove = new File(getFilesDir().toString() + "/" + GenericConstants.BETANOTES_DIRECTORY + "/" + noteMap.get("filename"));
+        fileToRemove.delete();
     }
 
     public void loadAllNotes(boolean quickMode)
@@ -216,6 +229,7 @@ public class MainActivity extends AppCompatActivity
             File directory = new File(getFilesDir().toString(), GenericConstants.BETANOTES_DIRECTORY);
             directory.mkdirs();
             prefs.edit().putBoolean("firstrun", false).apply();
+            prefs.edit().putBoolean("expertMode", false).apply();
         }
         else
         {
@@ -312,6 +326,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finish();
                 Intent intent = new Intent(MainActivity.this, Bnote.class);
                 intent.putExtra("newFile", "true");
                 startActivity(intent);
@@ -332,7 +347,7 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            this.finish();
+            finish();
         }
     }
 
@@ -344,6 +359,7 @@ public class MainActivity extends AppCompatActivity
 
         if(id == R.id.nav_homepage)
         {
+            finish();
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
             startActivity(intent);
@@ -351,12 +367,14 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_new_betanote)
         {
+            finish();
             Intent intent = new Intent(MainActivity.this, Bnote.class);
             intent.putExtra("newFile", "true");
             startActivity(intent);
         }
         else if (id == R.id.nav_settings)
         {
+            finish();
             Intent intent = new Intent(MainActivity.this, GeneralSettings.class);
             startActivity(intent);
         }
@@ -365,6 +383,7 @@ public class MainActivity extends AppCompatActivity
             //! Créer un nouvel Intent avec une aide dediée
         }
         else if (id == R.id.nav_about) {
+            finish();
             Intent intent = new Intent(MainActivity.this, About.class);
             startActivity(intent);
         }

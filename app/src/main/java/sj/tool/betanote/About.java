@@ -68,4 +68,11 @@ public class About extends AppCompatActivity implements NavigationView.OnNavigat
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(About.this, MainActivity.class);
+        startActivity(intent);
+    }
 }

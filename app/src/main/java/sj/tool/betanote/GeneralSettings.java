@@ -29,7 +29,9 @@ public class GeneralSettings extends AppCompatActivity implements NavigationView
     @Override
     public void onBackPressed()
     {
-        super.onBackPressed();
+        finish();
+        Intent intent = new Intent(GeneralSettings.this, MainActivity.class);
+        startActivity(intent);
     }
 
     protected void onCreate(Bundle savedInstanceState)
@@ -100,17 +102,20 @@ public class GeneralSettings extends AppCompatActivity implements NavigationView
 
         if(id == R.id.nav_homepage)
         {
+            finish();
             Intent intent = new Intent(GeneralSettings.this, MainActivity.class);
             startActivity(intent);
         }
         else if (id == R.id.nav_new_betanote)
         {
+            finish();
             Intent intent = new Intent(GeneralSettings.this, Bnote.class);
             intent.putExtra("newFile", "true");
             startActivity(intent);
         }
         else if (id == R.id.nav_settings)
         {
+            finish();
             Intent intent = new Intent(GeneralSettings.this, GeneralSettings.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
             startActivity(intent);
@@ -121,6 +126,7 @@ public class GeneralSettings extends AppCompatActivity implements NavigationView
             //! Créer un nouvel Intent avec une aide dediée
         }
         else if (id == R.id.nav_about) {
+            finish();
             Intent intent = new Intent(GeneralSettings.this, About.class);
             startActivity(intent);
         }

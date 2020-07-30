@@ -61,7 +61,9 @@ public class Bnote extends AppCompatActivity {
     public void onBackPressed()
     {
         saveNote();
-        super.onBackPressed();
+        finish();
+        Intent intent = new Intent(Bnote.this, MainActivity.class);
+        startActivity(intent);
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +163,7 @@ public class Bnote extends AppCompatActivity {
                         @Override
                         public void onClick(View v)
                         {
+                            finish();
                             Intent intent = new Intent(Bnote.this, MainActivity.class);
                             startActivity(intent);
                         }
@@ -169,6 +172,7 @@ public class Bnote extends AppCompatActivity {
                     builder.setOnCancelListener(new AlertDialog.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialog) {
+                            finish();
                             Intent intent = new Intent(Bnote.this, MainActivity.class);
                             startActivity(intent);
                         }
@@ -239,6 +243,7 @@ public class Bnote extends AppCompatActivity {
 
         if (id == R.id.action_nosave)
         {
+            finish();
             Intent intent = new Intent(Bnote.this, MainActivity.class);
             startActivity(intent);
         }
