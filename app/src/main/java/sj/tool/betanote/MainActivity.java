@@ -138,9 +138,8 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public void printAllNotes()
+    public void loadAllNotes(boolean quickMode)
     {
-        // Recherche des fichiers texte
         FileFinder fileFinder = new FileFinder();
         List<String> latest = fileFinder.sortByLatest(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY);
         linearLayoutLatest = new LinearLayout(this);
@@ -158,8 +157,14 @@ public class MainActivity extends AppCompatActivity
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+latestFiles));
                 settings = DataAnalyzer.extractSettings(br);
                 br = new BufferedReader(new FileReader(getFilesDir().toString() + "/"+ GenericConstants.BETANOTES_DIRECTORY +"/"+latestFiles));
-                bodyText = DataAnalyzer.extractBodyText(br, 50);
-
+                if(quickMode)
+                {
+                    bodyText = DataAnalyzer.extractBodyText(br, 50);
+                }
+                else
+                {
+                    bodyText = DataAnalyzer.extractBodyText(br, false);
+                }
                 note.put("settings", settings.getSettingsAsString());
                 note.put("body", bodyText);
                 note.put("filename", latestFiles);
@@ -186,8 +191,14 @@ public class MainActivity extends AppCompatActivity
             }
 
             //! Tri les notes de la plus récente à la plus ancienne
-            printNote(note);
+            if(quickMode)
+                printNote(note);
         }
+    }
+
+    public void printAllNotes()
+    {
+        loadAllNotes(true);
         if(linearLayoutLatest.getChildCount() == 0)
         {
             TextView txtNoNoteFound = new TextView(this);
@@ -261,6 +272,7 @@ public class MainActivity extends AppCompatActivity
                                             linearLayoutLatest = new LinearLayout(MainActivity.this);
                                             linearLayoutLatest.setOrientation(LinearLayout.VERTICAL);
                                             int count = 0;
+                                            loadAllNotes(false);
                                             for(final Map<String, String> note : allNotes)
                                             {
                                                 Settings settings = new Settings(note.get("settings"));
@@ -320,7 +332,7 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            this.finish();
         }
     }
 
