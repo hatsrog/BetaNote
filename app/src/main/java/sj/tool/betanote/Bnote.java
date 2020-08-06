@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -225,6 +226,19 @@ public class Bnote extends AppCompatActivity {
             settings = new Settings();
             settings.createSettingsNodes();
         }
+
+        editTextTitle.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent)
+            {
+                if(keyEvent.getAction() == KeyEvent.ACTION_DOWN && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+                {
+                    editTextBnote.requestFocus();
+                    editTextBnote.setSelection(editTextBnote.getText().length());
+                }
+                return false;
+            }
+        });
     }
 
     @Override
